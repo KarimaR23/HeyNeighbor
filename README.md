@@ -13,10 +13,9 @@ HeyNeighbor is a community-focused application that allows users to offer goods 
 
 ## Technology
 
-- **Programming Language:** 
-- **Framework:** 
-- **Database:** 
-- **Development Environment:** 
+- **Programming Language:** Java
+- **Database:** Neon 
+- **Development Environment:** IntelliJ
 
 ## Setup Instructions
 
