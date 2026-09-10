@@ -2,7 +2,7 @@
 
 ## Team Members 👥
 
-- Team Member 1
+- Kenyce Holloman
 - Team Member 2
 - Team Member 3
 - Rashard Miller
