@@ -4,7 +4,7 @@
 
 - Kenyce N Holloman
 - Trinity Banks
-- Team Member 3
+- Karima Dewdney
 - Christopher Rashard Miller
 
 ## Project Description  📖 
@@ -13,9 +13,16 @@ HeyNeighbor is a community-focused application that allows users to offer goods 
 
 ## Technology 💻
 
-- **Programming Language:** Java
-- **Database:** Neon 
-- **Development Environment:** IntelliJ
+The project is built using a modern, scalable full-stack architecture designed for performance, maintainability, and developer efficiency.
+
+- Programming Languages: Java & JavaScript 
+
+- Frameworks & Libraries: React & JUnit 
+
+- Database Technology: Neon 
+
+- Development Environment: IntelliJ IDEA  
+
 
 ## Setup Instructions ⚙️
 
