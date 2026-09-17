@@ -3,7 +3,7 @@
 ## Team Members 👥
 
 - Kenyce N Holloman
-- Team Member 2
+- Trinity Banks
 - Team Member 3
 - Christopher Rashard Miller
 
