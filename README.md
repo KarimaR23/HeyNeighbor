@@ -6,6 +6,7 @@
 - Trinity Banks
 - Karima Dewdney
 - Christopher Rashard Miller
+- Professor Allen
 
 ## Project Description  📖 
 
