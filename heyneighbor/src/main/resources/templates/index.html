@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${appName}">HeyNeighbor</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Top bar: logo, search, navigation placeholders -->
+<header class="topbar">
+  <a class="brand" href="#">
+    <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
+    <span th:text="${appName}">HeyNeighbor</span>
+  </a>
+
+  <form class="search" onsubmit="return false;" role="search">
+    <input type="search" placeholder="Search free items and services near you" aria-label="Search">
+    <select aria-label="Distance">
+      <option>5 mi</option>
+      <option>10 mi</option>
+      <option>25 mi</option>
+    </select>
+  </form>
+
+  <nav class="links" aria-label="Main navigation">
+    <a th:each="item : ${navItems}" th:href="${item.href}" th:text="${item.label}">Link</a>
+    <a th:each="item, st : ${authItems}" th:href="${item.href}" th:text="${item.label}"
+       th:classappend="${st.last} ? 'btn primary' : 'btn'">Auth</a>
+  </nav>
+</header>
+
+<!-- Category row -->
+<div class="categories">
+  <a th:each="c : ${categories}" href="#">
+    <span th:text="${c.emoji}">🥕</span>
+    <span th:text="${c.label}">Category</span>
+  </a>
+</div>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1 th:text="${tagline}">Tagline</h1>
+      <p th:text="${description}">Description</p>
+      <div class="cta">
+        <a class="btn primary big" href="#">Start giving</a>
+        <a class="btn big" href="#">Browse your neighborhood</a>
+      </div>
+    </div>
+    <img class="hero-logo" src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="HeyNeighbor logo">
+  </section>
+
+  <!-- Sample listings (static placeholders) -->
+  <section class="feed">
+    <h2>Near you right now</h2>
+    <div class="grid">
+      <article class="card" th:each="l : ${listings}">
+        <div class="thumb" th:style="'background:' + ${l.color}">
+          <span class="emoji" th:text="${l.emoji}">🍅</span>
+          <span class="badge" th:text="${l.type}"
+                th:classappend="${l.type == 'Trade'} ? 'trade' : ''">Free</span>
+        </div>
+        <div class="info">
+          <h3 th:text="${l.title}">Title</h3>
+          <p class="meta">
+            <span th:text="${l.category}">Category</span> ·
+            <span th:text="${l.distance}">1 mi</span>
+          </p>
+          <p class="giver"> Posted By <span th:text="${l.giver}">Neighbor</span></p>
+        </div>
+      </article>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Hey Neighbor.</p>
+</footer>
+</body>
+</html>
