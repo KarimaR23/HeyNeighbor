@@ -1,8 +1,8 @@
 :root {
     --blue:        #c8102e;   /* buttons, logo */
-    --blue-dark:   #9b0c23;   /* button hover */
+    --red-dark:   #9b0c23;   /* button hover */
     --red:       #1e40af;   /* top bar, hero */
-    --red-dark:  #172554;   /* hero gradient end */
+    --blue-dark:  #172554;   /* hero gradient end */
     --green:      #2f9e44;   /* "Free" badge */
     --brown:      #8b5e3c;   /* "Trade" badge, small details */
     --grey:       #e5e7eb;   /* borders, pills */
