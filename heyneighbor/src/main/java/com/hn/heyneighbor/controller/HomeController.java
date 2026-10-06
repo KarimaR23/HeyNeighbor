@@ -32,7 +32,7 @@ public class HomeController {
 
         model.addAttribute("authItems", List.of(
                 new NavItem("Login", "#"),
-                new NavItem("Sign Up", "#")));
+                new NavItem("Sign Up Here", "#")));
 
         model.addAttribute("categories", List.of(
                 new Category("Food", "🥕"),
