@@ -25,7 +25,7 @@ public class HomeController {
                         + "food, household goods, services, and more - at no cost.");
 
         model.addAttribute("navItems", List.of(
-                new NavItem("Browse", "#"),
+                new NavItem("Browser", "#"),
                 new NavItem("About", "#"),
                 new NavItem("Help", "#"),
                 new NavItem("Contact Us", "#")));
