@@ -1,0 +1,310 @@
+// HeyNeighbour — Sprint Cycle III
+// 20-table ERD based on the revised data dictionary.
+// Optional foreign keys are nullable; all required fields are NOT NULL.
+// Enum-like values are documented in notes; enforce values in PostgreSQL later.
+
+Table ROLE {
+  role_id integer [pk, not null]
+  role_name varchar(50) [unique, not null]
+  description text
+  is_system_role boolean [not null]
+}
+
+Table PERMISSION {
+  permission_id integer [pk, not null]
+  permission_code varchar(100) [unique, not null]
+  permission_area varchar(40) [not null]
+  is_admin_only boolean [not null]
+  description text
+}
+
+Table ROLE_PERMISSION {
+  role_id integer [not null, ref: > ROLE.role_id]
+  permission_id integer [not null, ref: > PERMISSION.permission_id]
+  indexes {
+    (role_id, permission_id) [pk]
+  }
+}
+
+Table USER_ACCOUNT {
+  user_id integer [pk, not null]
+  role_id integer [not null, ref: > ROLE.role_id]
+  email varchar(255) [unique, not null]
+  password_hash varchar(255) [not null]
+  account_status varchar [not null, note: 'PENDING, ACTIVE, DEACTIVATED, SUSPENDED, BANNED']
+  email_verified boolean [not null, default: false]
+  display_name varchar(100) [not null]
+  phone varchar(20)
+  avatar_image varchar(500)
+  bio text
+  city varchar(100)
+  state varchar(50)
+  postal_code varchar(10)
+  latitude decimal(9,6)
+  longitude decimal(9,6)
+  default_search_radius_miles integer
+  status_changed_by_user_id integer [ref: > USER_ACCOUNT.user_id]
+  status_changed_at datetime
+  status_reason text
+  created_by_user_id integer [ref: > USER_ACCOUNT.user_id]
+  created_at datetime [not null]
+  last_login_at datetime
+  updated_at datetime [not null]
+}
+
+Table ORGANIZATION {
+  organization_id integer [pk, not null]
+  owner_user_id integer [unique, not null, ref: - USER_ACCOUNT.user_id]
+  org_name varchar(150) [not null]
+  org_type varchar [not null, note: 'BUSINESS, NONPROFIT, CHURCH, FOOD_PANTRY, SHELTER, COMMUNITY_ORG, OTHER']
+  description text
+  services_offered text
+  operating_hours text
+  contact_email varchar(255)
+  contact_phone varchar(20)
+  website_url varchar(255)
+  street_address varchar(200) [not null]
+  city varchar(100) [not null]
+  state varchar(50) [not null]
+  postal_code varchar(10) [not null]
+  latitude decimal(9,6)
+  longitude decimal(9,6)
+  registration_number varchar(50)
+  approval_status varchar [not null, note: 'PENDING, APPROVED, REJECTED, DEACTIVATED']
+  reviewed_by_user_id integer [ref: > USER_ACCOUNT.user_id]
+  reviewed_at datetime
+  rejection_reason text
+  created_at datetime [not null]
+  updated_at datetime [not null]
+}
+
+Table CATEGORY {
+  category_id integer [pk, not null]
+  parent_category_id integer [ref: > CATEGORY.category_id]
+  name varchar(80) [unique, not null]
+  description text
+  display_order integer [not null]
+  is_active boolean [not null]
+}
+
+Table FULFILLMENT_METHOD {
+  method_id integer [pk, not null]
+  method_name varchar(40) [unique, not null]
+  description text
+  is_active boolean [not null]
+}
+
+Table LISTING {
+  listing_id integer [pk, not null]
+  owner_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  organization_id integer [ref: > ORGANIZATION.organization_id]
+  category_id integer [not null, ref: > CATEGORY.category_id]
+  listing_status varchar [not null, note: 'ACTIVE, RESERVED, COMPLETED, INACTIVE, HIDDEN, REMOVED, EXPIRED']
+  fulfillment_method_id integer [not null, ref: > FULFILLMENT_METHOD.method_id]
+  title varchar(150) [not null]
+  description text [not null]
+  listing_type varchar [not null, note: 'GIFT, TRADE']
+  offering_kind varchar [not null, note: 'GOOD, SERVICE']
+  trade_wanted text
+  quantity_available integer
+  quantity_unit varchar(30)
+  eligibility_info text
+  availability_notes text
+  pickup_dropoff_notes text
+  listing_images text [note: 'Ordered image references, e.g. JSON array']
+  city varchar(100)
+  postal_code varchar(10) [not null]
+  latitude decimal(9,6) [not null]
+  longitude decimal(9,6) [not null]
+  available_from datetime
+  expires_at datetime
+  created_at datetime [not null]
+  updated_at datetime [not null]
+  published_at datetime
+  completed_at datetime
+}
+
+Table REQUEST {
+  request_id integer [pk, not null]
+  listing_id integer [not null, ref: > LISTING.listing_id]
+  requester_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  request_status varchar [not null, note: 'PENDING, APPROVED, DECLINED, WITHDRAWN, FULFILLED, EXPIRED']
+  message text
+  quantity_requested integer
+  offered_listing_id integer [ref: > LISTING.listing_id]
+  offered_description text
+  requested_at datetime [not null]
+  responded_at datetime
+  responded_by_user_id integer [ref: > USER_ACCOUNT.user_id]
+  decline_reason text
+}
+
+Table EXCHANGE {
+  exchange_id integer [pk, not null]
+  listing_id integer [not null, ref: > LISTING.listing_id]
+  provider_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  receiver_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  request_id integer [unique, not null, ref: - REQUEST.request_id]
+  fulfillment_method_id integer [not null, ref: > FULFILLMENT_METHOD.method_id]
+  quantity integer
+  scheduled_at datetime
+  meeting_notes text
+  exchange_status varchar [not null, note: 'RESERVED, COMPLETED, CANCELLED, DISPUTED']
+  created_at datetime [not null]
+  completed_at datetime
+  completed_by_user_id integer [ref: > USER_ACCOUNT.user_id]
+  cancelled_at datetime
+  cancel_reason text
+}
+
+Table REVIEW {
+  review_id integer [pk, not null]
+  exchange_id integer [not null, ref: > EXCHANGE.exchange_id]
+  reviewer_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  reviewee_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  overall_rating integer [not null]
+  reliability_rating integer
+  friendliness_rating integer
+  comment text
+  review_status varchar [not null, note: 'VISIBLE, HIDDEN, REMOVED']
+  created_at datetime [not null]
+  updated_at datetime [not null]
+  indexes {
+    (exchange_id, reviewer_user_id) [unique]
+  }
+}
+
+Table CONVERSATION {
+  conversation_id integer [pk, not null]
+  conversation_type varchar [not null, note: 'INQUIRY, REQUEST, EXCHANGE, SUPPORT']
+  listing_id integer [ref: > LISTING.listing_id]
+  request_id integer [ref: > REQUEST.request_id]
+  exchange_id integer [ref: > EXCHANGE.exchange_id]
+  support_request_id integer [ref: > SUPPORT_REQUEST.support_request_id]
+  is_locked boolean [not null]
+  created_at datetime [not null]
+  last_message_at datetime
+  participant_user_ids text [not null, note: 'List of two or more user IDs']
+  participant_status text [not null, note: 'Per-user joined, last-read and archived details']
+  messages text [note: 'Ordered messages with number, sender, body, time, status']
+}
+
+Table NOTIFICATION {
+  notification_id integer [pk, not null]
+  user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  notification_type varchar [not null, note: 'NEW_MESSAGE, REQUEST_RECEIVED, TRADE_PROPOSED, EXCHANGE_COMPLETED, REPORT_UPDATE, etc.']
+  title varchar(150) [not null]
+  body text
+  related_entity_type varchar(40)
+  related_entity_id integer [note: 'Polymorphic ID; not a database FK']
+  is_read boolean [not null]
+  created_at datetime [not null]
+  read_at datetime
+}
+
+Table FAVORITE {
+  user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  listing_id integer [not null, ref: > LISTING.listing_id]
+  created_at datetime [not null]
+  indexes {
+    (user_id, listing_id) [pk]
+  }
+}
+
+Table RECENT_VIEW {
+  user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  listing_id integer [not null, ref: > LISTING.listing_id]
+  last_viewed_at datetime [not null]
+  indexes {
+    (user_id, listing_id) [pk]
+  }
+}
+
+Table REPORT {
+  report_id integer [pk, not null]
+  reporter_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  report_type varchar [not null, note: 'LISTING, USER, MESSAGE, REVIEW, EXCHANGE']
+  reported_listing_id integer [ref: > LISTING.listing_id]
+  reported_user_id integer [ref: > USER_ACCOUNT.user_id]
+  reported_conversation_id integer [ref: > CONVERSATION.conversation_id]
+  reported_message_number integer
+  reported_review_id integer [ref: > REVIEW.review_id]
+  reported_exchange_id integer [ref: > EXCHANGE.exchange_id]
+  routed_to_role_id integer [ref: > ROLE.role_id]
+  case_id integer [ref: > MODERATION_CASE.case_id]
+  reason varchar [not null, note: 'HARASSMENT, FRAUD, UNSAFE, INAPPROPRIATE, SPAM, NO_SHOW, OTHER']
+  description text
+  report_status varchar [not null, note: 'OPEN, IN_REVIEW, RESOLVED, DISMISSED']
+  created_at datetime [not null]
+  resolved_at datetime
+}
+
+Table MODERATION_CASE {
+  case_id integer [pk, not null]
+  assigned_moderator_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  subject_user_id integer [ref: > USER_ACCOUNT.user_id]
+  title varchar(150) [not null]
+  case_status varchar [not null, note: 'OPEN, UNDER_REVIEW, ESCALATED, CLOSED']
+  findings text
+  resolution text
+  action_type varchar [note: 'WARNING, LISTING_HIDDEN, LISTING_REMOVED, REVIEW_REMOVED, MESSAGE_REMOVED, RESTRICTION_APPLIED, NO_ACTION']
+  target_listing_id integer [ref: > LISTING.listing_id]
+  target_review_id integer [ref: > REVIEW.review_id]
+  target_conversation_id integer [ref: > CONVERSATION.conversation_id]
+  target_message_number integer
+  action_taken_at datetime
+  escalated_to_role_id integer [ref: > ROLE.role_id]
+  escalation_reason text
+  escalated_at datetime
+  opened_at datetime [not null]
+  updated_at datetime [not null]
+  closed_at datetime
+}
+
+Table USER_RESTRICTION {
+  restriction_id integer [pk, not null]
+  case_id integer [not null, ref: > MODERATION_CASE.case_id]
+  user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  imposed_by_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  restriction_type varchar [not null, note: 'NO_LISTINGS, NO_MESSAGES, NO_EXCHANGES']
+  reason text [not null]
+  starts_at datetime [not null]
+  ends_at datetime [not null, note: 'Must be later than starts_at; enforce with SQL CHECK']
+  lifted_at datetime
+  created_at datetime [not null]
+}
+
+Table SUPPORT_REQUEST {
+  support_request_id integer [pk, not null]
+  requester_user_id integer [not null, ref: > USER_ACCOUNT.user_id]
+  assigned_coordinator_id integer [ref: > USER_ACCOUNT.user_id]
+  related_listing_id integer [ref: > LISTING.listing_id]
+  related_exchange_id integer [ref: > EXCHANGE.exchange_id]
+  request_type varchar [not null, note: 'EXCHANGE_PROBLEM, ACCOUNT_PROBLEM, PARTNER_ASSISTANCE, DISPUTE, ROLE_CHANGE, OTHER']
+  requested_role_id integer [ref: > ROLE.role_id]
+  subject varchar(150) [not null]
+  description text [not null]
+  status varchar [not null, note: 'OPEN, IN_PROGRESS, WAITING_ON_USER, ESCALATED, RESOLVED, CLOSED']
+  priority varchar [not null, note: 'LOW, NORMAL, HIGH, URGENT']
+  dispute_type varchar [note: 'NO_SHOW, NOT_AS_DESCRIBED, UNAVAILABLE, COMMUNICATION, OTHER']
+  recommended_resolution text
+  resolution_summary text
+  escalated_to_role_id integer [ref: > ROLE.role_id]
+  escalation_reason text
+  escalated_at datetime
+  notes text [note: 'Ordered support notes including author, text, internal flag and timestamp']
+  created_at datetime [not null]
+  updated_at datetime [not null]
+  resolved_at datetime
+  closed_at datetime
+}
+
+Table SYSTEM_SETTING {
+  setting_id integer [pk, not null]
+  setting_key varchar(100) [unique, not null]
+  setting_value varchar(500) [not null]
+  value_type varchar [not null, note: 'STRING, INTEGER, BOOLEAN, DECIMAL']
+  description text
+  updated_by_user_id integer [ref: > USER_ACCOUNT.user_id]
+  updated_at datetime [not null]
+}
