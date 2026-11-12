@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Admin Reports</title></head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+  <h1>Generate Report</h1>
+  <p class="muted">Choose what to measure and for what period, then generate the report.</p>
+
+  <p class="alert error" th:if="${error}" th:text="${error}">Problem.</p>
+
+  <form class="report-form" method="get" th:action="@{/admin/reports}">
+
+    <h2 class="step">1. Report type</h2>
+    <div class="type-cards">
+      <label class="type-card" th:each="t : ${types}">
+        <input type="radio" name="type" th:value="${t.key}" th:checked="${t.key == type}">
+        <span class="type-body">
+          <span class="type-icon" th:text="${t.icon}">📈</span>
+          <strong th:text="${t.title}">Platform Activity</strong>
+          <small th:text="${t.text}">Listings, exchanges, new members</small>
+        </span>
+      </label>
+    </div>
+
+    <div class="report-panels">
+      <fieldset class="panel">
+        <legend>2. Date range</legend>
+        <label for="range">Period</label>
+        <select id="range" name="range">
+          <option value="7d" th:selected="${range == '7d'}">Last 7 days</option>
+          <option value="30d" th:selected="${range == '30d'}">Last 30 days</option>
+          <option value="90d" th:selected="${range == '90d'}">Last 90 days</option>
+          <option value="year" th:selected="${range == 'year'}">This year</option>
+          <option value="custom" th:selected="${range == 'custom'}">Custom range</option>
+        </select>
+        <div class="two-col">
+          <div>
+            <label for="from">From</label>
+            <input id="from" type="date" name="from" th:value="${from}">
+          </div>
+          <div>
+            <label for="to">To</label>
+            <input id="to" type="date" name="to" th:value="${to}">
+          </div>
+        </div>
+        <p class="muted small">From and To are used when the period is “Custom range”.</p>
+        <label for="group">Group results by</label>
+        <select id="group" name="group">
+          <option value="day" th:selected="${group == 'day'}">Day</option>
+          <option value="week" th:selected="${group == 'week'}">Week</option>
+          <option value="month" th:selected="${group == 'month'}">Month</option>
+        </select>
+        <p class="muted small">Grouping applies to Platform Activity and User Growth.</p>
+      </fieldset>
+
+      <fieldset class="panel">
+        <legend>3. Include</legend>
+        <p class="panel-label">Categories</p>
+        <div class="checks">
+          <label th:each="c : ${categories}">
+            <input type="checkbox" name="cat" th:value="${c.category_id}"
+                   th:checked="${#sets.contains(selectedCategories, c.category_id)}">
+            <span th:text="${c.name}">Food</span>
+          </label>
+        </div>
+        <p class="panel-label">User roles</p>
+        <div class="checks">
+          <label th:each="r : ${roleOptions}">
+            <input type="checkbox" name="role" th:value="${r.value}"
+                   th:checked="${#sets.contains(selectedRoles, r.value)}">
+            <span th:text="${r.label}">Community Users</span>
+          </label>
+        </div>
+        <p class="muted small">Leave everything unticked to include all.</p>
+        <label for="compare">Compare</label>
+        <select id="compare" name="compare">
+          <option value="none" th:selected="${compare == 'none'}">No comparison</option>
+          <option value="previous" th:selected="${compare == 'previous'}">Previous period</option>
+        </select>
+      </fieldset>
+    </div>
+
+    <div class="report-actions">
+      <a class="btn-grey" th:href="@{/admin/reports}">Reset</a>
+      <button class="submit" type="submit" name="generate" value="1">Generate Report</button>
+    </div>
+  </form>
+
+  <section class="report-result" th:if="${generated}">
+    <h2 th:text="${result.title}">Platform Activity</h2>
+    <p class="muted">
+      <span th:text="${result.description}">Description</span>
+      <br>Period: <strong th:text="${rangeLabel}">Oct 1, 2026 to Oct 30, 2026</strong>
+      <span th:if="${previousLabel != null}">· compared with <strong th:text="${previousLabel}">earlier</strong></span>
+    </p>
+
+    <div class="stat-row">
+      <div class="stat" th:each="s : ${summary}">
+        <span class="stat-label" th:text="${s.label}">New listings</span>
+        <strong class="stat-value" th:text="${s.value}">0</strong>
+        <span class="stat-compare" th:if="${s.previous != null}">
+          <span th:text="'Before: ' + ${s.previous}">Before: 0</span>
+          <span class="trend" th:classappend="${'trend-' + s.trend}" th:text="${s.change}">+0%</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="table-wrap" th:if="${!#lists.isEmpty(result.rows)}">
+      <table class="data">
+        <thead>
+        <tr><th th:each="c : ${result.columns}" th:text="${c.label}" th:classappend="${c.numeric} ? 'num'">Column</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="row : ${result.rows}">
+          <td th:each="c : ${result.columns}" th:text="${row[c.key]}" th:classappend="${c.numeric} ? 'num'">value</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="empty" th:if="${#lists.isEmpty(result.rows)}">No activity matched this period and these choices.</p>
+  </section>
+</main>
+
+<script>
+  (function () {
+    var range = document.getElementById('range');
+    var from = document.getElementById('from');
+    var to = document.getElementById('to');
+    function iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+    range.addEventListener('change', function () {
+      var today = new Date(), start = new Date();
+      if (range.value === 'custom') { return; }
+      if (range.value === '7d') { start.setDate(today.getDate() - 6); }
+      else if (range.value === '30d') { start.setDate(today.getDate() - 29); }
+      else if (range.value === '90d') { start.setDate(today.getDate() - 89); }
+      else { start = new Date(today.getFullYear(), 0, 1); }
+      from.value = iso(start);
+      to.value = iso(today);
+    });
+    [from, to].forEach(function (box) {
+      box.addEventListener('change', function () { range.value = 'custom'; });
+    });
+  })();
+</script>
+
+</body>
+</html>

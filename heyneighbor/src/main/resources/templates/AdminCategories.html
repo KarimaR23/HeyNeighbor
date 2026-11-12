@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Admin Categories </title></head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+    <div class="cat-layout">
+
+        <aside class="cat-side">
+            <a class="cat-back" th:href="@{/admin}">← Admin home</a>
+            <p class="cat-side-title">Categories</p>
+            <a class="submit cat-new" th:href="@{/admin/categories(new=1,show=${show})}">＋ New Category</a>
+            <ul class="cat-filter">
+                <li th:classappend="${show == 'all'} ? 'on'">
+                    <a th:href="@{/admin/categories}">All
+                        <strong th:text="${counts.active + counts.inactive}">25</strong></a>
+                </li>
+                <li th:classappend="${show == 'active'} ? 'on'">
+                    <a th:href="@{/admin/categories(show='active')}">Active
+                        <strong th:text="${counts.active}">18</strong></a>
+                </li>
+                <li th:classappend="${show == 'inactive'} ? 'on'">
+                    <a th:href="@{/admin/categories(show='inactive')}">Inactive
+                        <strong th:text="${counts.inactive}">7</strong></a>
+                </li>
+            </ul>
+        </aside>
+
+        <section class="cat-main">
+            <h1>All Categories</h1>
+            <p class="alert ok" th:if="${message}" th:text="${message}">Saved.</p>
+            <p class="alert error" th:if="${error}" th:text="${error}">Problem.</p>
+
+            <ul class="cat-list" th:if="${!#lists.isEmpty(rows)}">
+                <li th:each="c : ${rows}"
+                    th:classappend="${form != null and form.id != null and form.id == c.category_id} ? 'selected'">
+                    <a th:href="@{/admin/categories(edit=${c.category_id},show=${show})}">
+                        <span class="cat-icon">▦</span>
+                        <span class="cat-name">
+              <span th:text="${c.name}">Food</span>
+              <small class="muted" th:if="${c.parent_name != null}" th:text="'in ' + ${c.parent_name}">in Parent</small>
+            </span>
+                        <span class="pill" th:classappend="${c.is_active} ? 'pill-active' : 'pill-deactivated'"
+                              th:text="${c.is_active} ? ('Active · ' + ${c.active_listings} + (${c.active_listings} == 1 ? ' listing' : ' listings')) : 'Inactive'">
+              Active · 3 listings</span>
+                    </a>
+                </li>
+            </ul>
+            <p class="empty" th:if="${#lists.isEmpty(rows)}">No categories to show here.</p>
+        </section>
+
+        <section class="cat-edit" th:if="${mode != null}">
+            <form class="panel" method="post"
+                  th:with="saveUrl=${mode == 'new' ? '/admin/categories' : '/admin/categories/' + form.id}"
+                  th:action="@{${saveUrl}}">
+                <h2 th:text="${mode == 'new'} ? 'New category' : 'Edit category: ' + ${form.name}">Edit category</h2>
+
+                <label for="cat-name">Category Name</label>
+                <input id="cat-name" type="text" name="name" maxlength="80" required th:value="${form.name}">
+
+                <label for="cat-desc">Description</label>
+                <textarea id="cat-desc" name="description" rows="4" maxlength="500" th:text="${form.description}"></textarea>
+
+                <label for="cat-parent">Parent Category</label>
+                <select id="cat-parent" name="parentId">
+                    <option value="">None</option>
+                    <option th:each="p : ${parents}"
+                            th:unless="${form.id != null and form.id == p.category_id}"
+                            th:value="${p.category_id}" th:text="${p.name}"
+                            th:selected="${form.parentId != null and form.parentId == p.category_id}">Parent</option>
+                </select>
+
+                <label class="switch-row" for="cat-active">
+                    <span>Category is active</span>
+                    <input id="cat-active" type="checkbox" name="active" value="true" th:checked="${form.active}">
+                </label>
+
+                <div class="cat-actions">
+                    <button type="submit" class="btn-grey" th:if="${mode == 'edit' and form.active}"
+                            form="state-form" th:formaction="@{/admin/categories/{id}/deactivate(id=${form.id})}"
+                            onclick="return confirm('Deactivate this category? Existing listings are kept, but it can no longer be chosen for new listings.');">Deactivate</button>
+                    <button type="submit" class="btn-grey" th:if="${mode == 'edit' and !form.active}"
+                            form="state-form" th:formaction="@{/admin/categories/{id}/activate(id=${form.id})}">Reactivate</button>
+                    <a class="btn-grey" th:href="@{/admin/categories(show=${show})}">Cancel</a>
+                    <button type="submit" class="submit" th:text="${mode == 'new'} ? 'Add Category' : 'Save Changes'">Save Changes</button>
+                </div>
+            </form>
+            <form id="state-form" method="post"></form>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>
