@@ -65,3 +65,93 @@ a { color:inherit; text-decoration:none; }
 .giver { margin:0; font-size:.85rem; color:var(--brown); }
 
 footer { text-align:center; padding:1.5rem; font-size:.85rem; color:var(--grey-dark); background:var(--grey-light); border-top:1px solid var(--grey); }
+
+
+
+
+
+
+
+/* ============================================================
+   Sprint IV (administrator): Manage Categories and Generate Report
+   ============================================================ */
+
+textarea { padding:.65rem .8rem; border:1px solid #cbd5e1; border-radius:8px; font:inherit; background:var(--white);
+    color:var(--black); width:100%; resize:vertical; }
+textarea:focus { outline:2px solid var(--red); outline-offset:1px; }
+input[type=text], input[type=date] { padding:.65rem .8rem; border:1px solid #cbd5e1; border-radius:8px; font:inherit;
+    background:var(--white); color:var(--black); width:100%; }
+input[type=text]:focus, input[type=date]:focus { outline:2px solid var(--red); outline-offset:1px; }
+.btn-grey { display:inline-block; padding:.6rem 1.2rem; border:none; border-radius:999px; background:var(--grey);
+    color:#374151; font:inherit; font-weight:600; cursor:pointer; text-align:center; }
+.btn-grey:hover { background:#d1d5db; }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+
+/* Manage Categories: sidebar | list | edit panel */
+.cat-layout { display:grid; grid-template-columns:200px minmax(260px,1fr) minmax(280px,380px); gap:1.5rem; align-items:start; }
+.cat-side { display:flex; flex-direction:column; gap:.75rem; padding-right:1rem; border-right:1px solid var(--grey); min-height:300px; }
+.cat-back { color:var(--grey-dark); font-size:.9rem; }
+.cat-back:hover { color:var(--red); }
+.cat-side-title { margin:.25rem 0 0; font-weight:700; color:var(--grey-dark); text-transform:uppercase; font-size:.78rem; letter-spacing:.05em; }
+.cat-new { text-align:center; border-radius:999px; }
+.cat-filter { list-style:none; margin:.5rem 0 0; padding:0; display:flex; flex-direction:column; gap:.25rem; }
+.cat-filter a { display:flex; justify-content:space-between; padding:.5rem .75rem; border-radius:8px; }
+.cat-filter li.on a { background:var(--grey-light); font-weight:700; }
+.cat-filter a:hover { background:var(--grey-light); }
+.cat-main h1 { margin-top:0; }
+.cat-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.6rem; }
+.cat-list a { display:flex; align-items:center; gap:.75rem; padding:.75rem 1rem; border-radius:12px;
+    background:var(--grey-light); border:1px solid transparent; }
+.cat-list a:hover { border-color:var(--red); }
+.cat-list li.selected a { border-color:var(--red); background:#fff5f5; }
+.cat-icon { color:var(--grey-dark); }
+.cat-name { flex:1; display:flex; flex-direction:column; font-weight:600; }
+.cat-name small { font-weight:400; }
+.cat-edit .panel { display:flex; flex-direction:column; gap:.45rem; background:var(--grey-light); }
+.cat-edit h2 { margin:0 0 .5rem; font-size:1.05rem; }
+.cat-edit label { font-weight:600; font-size:.9rem; margin-top:.35rem; }
+.switch-row { display:flex; justify-content:space-between; align-items:center; margin-top:.75rem !important; }
+.switch-row input[type=checkbox] { appearance:none; -webkit-appearance:none; width:46px; height:26px; border-radius:999px;
+    background:#9ca3af; position:relative; cursor:pointer; transition:background .15s; }
+.switch-row input[type=checkbox]::after { content:""; position:absolute; top:3px; left:3px; width:20px; height:20px;
+    border-radius:50%; background:var(--white); transition:left .15s; }
+.switch-row input[type=checkbox]:checked { background:var(--green); }
+.switch-row input[type=checkbox]:checked::after { left:23px; }
+.cat-actions { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:flex-end; margin-top:1rem; }
+
+/* Generate Report */
+.report-form .step { margin:1.25rem 0 .6rem; font-size:1rem; color:var(--grey-dark); }
+.type-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:.9rem; }
+.type-card { cursor:pointer; }
+.type-card input { position:absolute; opacity:0; pointer-events:none; }
+.type-body { display:flex; flex-direction:column; gap:.25rem; height:100%; padding:1rem; border-radius:12px;
+    background:var(--grey-light); border:2px solid transparent; }
+.type-body small { color:var(--grey-dark); }
+.type-icon { font-size:1.5rem; }
+.type-card:hover .type-body { border-color:#fca5a5; }
+.type-card input:checked + .type-body { border-color:var(--red); background:#fff5f5; }
+.type-card input:focus-visible + .type-body { outline:2px solid var(--red); outline-offset:2px; }
+.report-panels { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1rem; margin-top:1.25rem; }
+.report-panels .panel { background:var(--grey-light); display:flex; flex-direction:column; gap:.4rem; margin:0; }
+.report-panels legend { font-weight:700; padding:0 .4rem; }
+.report-panels label { font-weight:600; font-size:.9rem; margin-top:.4rem; }
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.panel-label { margin:.4rem 0 0; font-weight:600; font-size:.9rem; }
+.checks { display:flex; flex-wrap:wrap; gap:.4rem 1rem; }
+.checks label { display:flex; align-items:center; gap:.4rem; font-weight:500; margin:0; }
+.report-actions { display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; }
+.report-result { margin-top:2rem; padding-top:1rem; border-top:1px solid var(--grey); }
+.stat-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:.9rem; margin:1rem 0 1.25rem; }
+.stat { display:flex; flex-direction:column; gap:.2rem; padding:1rem; border:1px solid var(--grey); border-radius:12px; }
+.stat-label { color:var(--grey-dark); font-size:.85rem; }
+.stat-value { font-size:1.7rem; }
+.stat-compare { display:flex; justify-content:space-between; gap:.5rem; font-size:.8rem; color:var(--grey-dark); }
+.trend { font-weight:700; }
+.trend-up { color:#166534; }
+.trend-down { color:#991b1b; }
+.trend-flat { color:var(--grey-dark); }
+
+@media (max-width: 900px) {
+    .cat-layout { grid-template-columns:1fr; }
+    .cat-side { border-right:none; border-bottom:1px solid var(--grey); padding:0 0 1rem; min-height:0; }
+}
