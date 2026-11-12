@@ -1,6 +1,7 @@
 package com.hn.heyneighbor.controller;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
 
@@ -16,9 +17,9 @@ class HomeControllerTest {
         HomeController controller = new HomeController();
         Model model = new ConcurrentModel();
 
-        String view = controller.home(model);
+        String view = controller.home(model, new MockHttpServletRequest());
 
-        assertEquals("index", view);
+        assertEquals("Index", view);
         assertEquals("HeyNeighbor", model.getAttribute("appName"));
         assertTrue(Objects.requireNonNull(model.getAttribute("navItems")).toString().contains("Contact Us"));
         assertTrue(Objects.requireNonNull(model.getAttribute("authItems")).toString().contains("Login"));

@@ -1,5 +1,7 @@
 package com.hn.heyneighbor.controller;
 
+import com.hn.heyneighbor.security.CurrentUser;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +19,7 @@ public class HomeController {
                           String distance, String giver, String emoji, String color) {}
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, HttpServletRequest request) {
         model.addAttribute("appName", "HeyNeighbor");
         model.addAttribute("tagline", "Give freely. Share locally. Strengthen your community.");
         model.addAttribute("description",
@@ -30,8 +32,11 @@ public class HomeController {
                 new NavItem("Help", "#"),
                 new NavItem("Contact Us", "#")));
 
-        model.addAttribute("authItems", List.of(
-                new NavItem("Login", "#"),
+        // Signed-in visitors get a link back to their dashboard instead of Login / Sign Up
+        boolean signedIn = CurrentUser.get(request) != null;
+        model.addAttribute("authItems", signedIn
+                ? List.of(new NavItem("My Dashboard", "/dashboard"))
+                : List.of(new NavItem("Login", "/login"),
                 new NavItem("Sign Up Here", "#")));
 
         model.addAttribute("categories", List.of(
