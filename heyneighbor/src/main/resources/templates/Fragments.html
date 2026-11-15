@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' | HeyNeighbor'">HeyNeighbor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Header and role navigation for every signed-in page -->
+<th:block th:fragment="header">
+    <header class="topbar">
+        <a class="brand" th:href="@{/dashboard}">
+            <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
+            <span>HeyNeighbor</span>
+        </a>
+        <div class="who">
+            <span class="role-chip" th:text="${currentUser.roleLabel}">Role</span>
+            <span class="who-name" th:text="${currentUser.displayName}">Name</span>
+            <form th:action="@{/logout}" method="post">
+                <button class="btn" type="submit">Sign out</button>
+            </form>
+        </div>
+    </header>
+
+    <nav class="subnav" aria-label="Role navigation">
+        <th:block th:each="n : ${roleNav}">
+            <a th:if="${n.enabled}" th:href="@{${n.href}}">
+                <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
+            </a>
+            <span th:unless="${n.enabled}" class="soon" title="Coming soon">
+        <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
+      </span>
+        </th:block>
+    </nav>
+</th:block>
+
+</body>
+</html>

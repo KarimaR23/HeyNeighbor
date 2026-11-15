@@ -154,4 +154,165 @@ td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
 @media (max-width: 900px) {
     .cat-layout { grid-template-columns:1fr; }
     .cat-side { border-right:none; border-bottom:1px solid var(--grey); padding:0 0 1rem; min-height:0; }
+
+
+
+    /* ============================================================
+   Sprint IV: sign-in, role navigation and data screens
+   ============================================================ */
+
+    main.wide   { max-width:1100px; margin:1.5rem auto 3rem; padding:0 1.5rem; }
+    main.narrow { max-width:440px;  margin:3rem auto; padding:0 1.5rem; }
+    main h1 { margin:0 0 1rem; }
+    .muted { color:var(--grey-dark); }
+    .small { font-size:.85rem; }
+
+    /* Header: who is signed in */
+    .who { margin-left:auto; display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; }
+    .who form { margin:0; }
+    .who-name { font-weight:600; }
+    .role-chip { padding:.2rem .7rem; border-radius:999px; background:rgba(255,255,255,.18); font-size:.8rem; font-weight:700; }
+    button.btn { background:transparent; cursor:pointer; font:inherit; font-weight:600; }
+
+    /* Role navigation row */
+    .subnav { display:flex; gap:.5rem; overflow-x:auto; padding:.6rem 1.5rem; background:var(--grey-light); border-bottom:1px solid var(--grey); }
+    .subnav a, .subnav .soon { display:flex; align-items:center; gap:.4rem; padding:.4rem .9rem; border-radius:999px;
+        background:var(--white); border:1px solid var(--grey); white-space:nowrap; font-weight:500; color:var(--black); }
+    .subnav a:hover { border-color:var(--red); color:var(--red); }
+    .subnav .soon { color:var(--grey-dark); background:transparent; border-style:dashed; cursor:default; }
+
+    /* Sign-in card and shared panels */
+    .panel { background:var(--white); border:1px solid var(--grey); border-radius:14px; padding:1.5rem; }
+    .login-card h1 { margin-top:0; }
+    .stack { display:flex; flex-direction:column; gap:.5rem; margin:1rem 0; }
+    .stack label { font-weight:600; font-size:.9rem; margin-top:.4rem; }
+    input[type=email], input[type=password], input[type=search], select {
+        padding:.65rem .8rem; border:1px solid #cbd5e1; border-radius:8px; font:inherit; background:var(--white); color:var(--black); }
+    input:focus, select:focus { outline:2px solid var(--red); outline-offset:1px; }
+    .submit { display:inline-block; padding:.65rem 1.3rem; border:none; border-radius:8px; background:var(--red);
+        color:var(--white); font:inherit; font-weight:700; cursor:pointer; }
+    .submit:hover { background:var(--blue-dark); }
+    .link-button { text-decoration:none; }
+    .alert { padding:.7rem 1rem; border-radius:8px; margin:.75rem 0; font-weight:500; }
+    .alert.error { background:#fee2e2; color:#991b1b; }
+    .alert.ok { background:#dcfce7; color:#166534; }
+
+    /* Landing tiles */
+    .welcome h1 { margin-bottom:.25rem; }
+    .tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.1rem; margin-top:1.5rem; }
+    .tile { display:flex; flex-direction:column; gap:.35rem; padding:1.2rem; border:1px solid var(--grey); border-radius:14px; background:var(--white); }
+    a.tile:hover { box-shadow:0 6px 18px rgba(0,0,0,.12); border-color:var(--red); }
+    .tile-icon { font-size:2rem; }
+    .tile-title { font-weight:700; font-size:1.05rem; }
+    .tile-text { color:var(--grey-dark); font-size:.9rem; flex:1; }
+    .tile-go { color:var(--red); font-weight:700; }
+    .tile.off { background:var(--grey-light); border-style:dashed; }
+    .tile.off .tile-title, .tile.off .tile-icon { opacity:.6; }
+    .tile-soon { color:var(--grey-dark); font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+
+    /* Search and filter bar */
+    .filters { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+    .filters input[type=search] { flex:1 1 240px; }
+    .reset { color:var(--grey-dark); text-decoration:underline; }
+    .count { color:var(--grey-dark); margin:.25rem 0 1rem; }
+    .empty { padding:2rem; text-align:center; color:var(--grey-dark); background:var(--grey-light); border-radius:14px; }
+    .blurb { margin:.2rem 0 .4rem; font-size:.9rem; color:var(--black); }
+    .org-box { margin-bottom:1rem; display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+
+    /* Tables */
+    .table-wrap { overflow-x:auto; border:1px solid var(--grey); border-radius:14px; }
+    table.data { width:100%; border-collapse:collapse; font-size:.92rem; }
+    table.data th { text-align:left; padding:.7rem .9rem; background:var(--grey-light); border-bottom:1px solid var(--grey); white-space:nowrap; }
+    table.data td { padding:.7rem .9rem; border-bottom:1px solid var(--grey); vertical-align:top; }
+    table.data tr:last-child td { border-bottom:none; }
+
+    /* Status pills */
+    .pill { display:inline-block; padding:.15rem .6rem; border-radius:999px; font-size:.78rem; font-weight:700; background:var(--grey); color:#374151; white-space:nowrap; }
+    .pill-active, .pill-approved, .pill-resolved, .pill-fulfilled { background:#dcfce7; color:#166534; }
+    .pill-pending, .pill-open, .pill-in_review, .pill-in_progress, .pill-waiting_on_user, .pill-normal { background:#fef3c7; color:#92400e; }
+    .pill-suspended, .pill-banned, .pill-declined, .pill-rejected, .pill-hidden, .pill-removed, .pill-escalated, .pill-urgent, .pill-high { background:#fee2e2; color:#991b1b; }
+    .pill-deactivated, .pill-dismissed, .pill-closed, .pill-withdrawn, .pill-expired, .pill-low { background:var(--grey); color:#374151; }
+    .pill-reason { background:#ede9fe; color:#5b21b6; }
+
 }
+
+
+
+
+
+/* ============================================================
+   Sprint IV: sign-in, role navigation and data screens
+   ============================================================ */
+
+main.wide   { max-width:1100px; margin:1.5rem auto 3rem; padding:0 1.5rem; }
+main.narrow { max-width:440px;  margin:3rem auto; padding:0 1.5rem; }
+main h1 { margin:0 0 1rem; }
+.muted { color:var(--grey-dark); }
+.small { font-size:.85rem; }
+
+/* Header: who is signed in */
+.who { margin-left:auto; display:flex; align-items:center; gap:.75rem; flex-wrap:wrap; }
+.who form { margin:0; }
+.who-name { font-weight:600; }
+.role-chip { padding:.2rem .7rem; border-radius:999px; background:rgba(255,255,255,.18); font-size:.8rem; font-weight:700; }
+button.btn { background:transparent; cursor:pointer; font:inherit; font-weight:600; }
+
+/* Role navigation row */
+.subnav { display:flex; gap:.5rem; overflow-x:auto; padding:.6rem 1.5rem; background:var(--grey-light); border-bottom:1px solid var(--grey); }
+.subnav a, .subnav .soon { display:flex; align-items:center; gap:.4rem; padding:.4rem .9rem; border-radius:999px;
+    background:var(--white); border:1px solid var(--grey); white-space:nowrap; font-weight:500; color:var(--black); }
+.subnav a:hover { border-color:var(--red); color:var(--red); }
+.subnav .soon { color:var(--grey-dark); background:transparent; border-style:dashed; cursor:default; }
+
+/* Sign-in card and shared panels */
+.panel { background:var(--white); border:1px solid var(--grey); border-radius:14px; padding:1.5rem; }
+.login-card h1 { margin-top:0; }
+.stack { display:flex; flex-direction:column; gap:.5rem; margin:1rem 0; }
+.stack label { font-weight:600; font-size:.9rem; margin-top:.4rem; }
+input[type=email], input[type=password], input[type=search], select {
+    padding:.65rem .8rem; border:1px solid #cbd5e1; border-radius:8px; font:inherit; background:var(--white); color:var(--black); }
+input:focus, select:focus { outline:2px solid var(--red); outline-offset:1px; }
+.submit { display:inline-block; padding:.65rem 1.3rem; border:none; border-radius:8px; background:var(--red);
+    color:var(--white); font:inherit; font-weight:700; cursor:pointer; }
+.submit:hover { background:var(--blue-dark); }
+.link-button { text-decoration:none; }
+.alert { padding:.7rem 1rem; border-radius:8px; margin:.75rem 0; font-weight:500; }
+.alert.error { background:#fee2e2; color:#991b1b; }
+.alert.ok { background:#dcfce7; color:#166534; }
+
+/* Landing tiles */
+.welcome h1 { margin-bottom:.25rem; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1.1rem; margin-top:1.5rem; }
+.tile { display:flex; flex-direction:column; gap:.35rem; padding:1.2rem; border:1px solid var(--grey); border-radius:14px; background:var(--white); }
+a.tile:hover { box-shadow:0 6px 18px rgba(0,0,0,.12); border-color:var(--red); }
+.tile-icon { font-size:2rem; }
+.tile-title { font-weight:700; font-size:1.05rem; }
+.tile-text { color:var(--grey-dark); font-size:.9rem; flex:1; }
+.tile-go { color:var(--red); font-weight:700; }
+.tile.off { background:var(--grey-light); border-style:dashed; }
+.tile.off .tile-title, .tile.off .tile-icon { opacity:.6; }
+.tile-soon { color:var(--grey-dark); font-size:.8rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
+
+/* Search and filter bar */
+.filters { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; }
+.filters input[type=search] { flex:1 1 240px; }
+.reset { color:var(--grey-dark); text-decoration:underline; }
+.count { color:var(--grey-dark); margin:.25rem 0 1rem; }
+.empty { padding:2rem; text-align:center; color:var(--grey-dark); background:var(--grey-light); border-radius:14px; }
+.blurb { margin:.2rem 0 .4rem; font-size:.9rem; color:var(--black); }
+.org-box { margin-bottom:1rem; display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+
+/* Tables */
+.table-wrap { overflow-x:auto; border:1px solid var(--grey); border-radius:14px; }
+table.data { width:100%; border-collapse:collapse; font-size:.92rem; }
+table.data th { text-align:left; padding:.7rem .9rem; background:var(--grey-light); border-bottom:1px solid var(--grey); white-space:nowrap; }
+table.data td { padding:.7rem .9rem; border-bottom:1px solid var(--grey); vertical-align:top; }
+table.data tr:last-child td { border-bottom:none; }
+
+/* Status pills */
+.pill { display:inline-block; padding:.15rem .6rem; border-radius:999px; font-size:.78rem; font-weight:700; background:var(--grey); color:#374151; white-space:nowrap; }
+.pill-active, .pill-approved, .pill-resolved, .pill-fulfilled { background:#dcfce7; color:#166534; }
+.pill-pending, .pill-open, .pill-in_review, .pill-in_progress, .pill-waiting_on_user, .pill-normal { background:#fef3c7; color:#92400e; }
+.pill-suspended, .pill-banned, .pill-declined, .pill-rejected, .pill-hidden, .pill-removed, .pill-escalated, .pill-urgent, .pill-high { background:#fee2e2; color:#991b1b; }
+.pill-deactivated, .pill-dismissed, .pill-closed, .pill-withdrawn, .pill-expired, .pill-low { background:var(--grey); color:#374151; }
+.pill-reason { background:#ede9fe; color:#5b21b6; }

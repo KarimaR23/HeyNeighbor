@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Landing</title></head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+  <section class="welcome">
+    <h1>Welcome, <span th:text="${currentUser.displayName}">Neighbor</span></h1>
+    <p class="muted">You are signed in as <strong th:text="${currentUser.roleLabel}">Role</strong>.
+      Here is everything you will be able to do.</p>
+  </section>
+
+  <section class="tiles">
+    <th:block th:each="n : ${roleNav}">
+      <a class="tile" th:if="${n.enabled}" th:href="@{${n.href}}">
+        <span class="tile-icon" th:text="${n.icon}">•</span>
+        <span class="tile-title" th:text="${n.label}">Title</span>
+        <span class="tile-text" th:text="${n.description}">Description</span>
+        <span class="tile-go">Open →</span>
+      </a>
+      <div class="tile off" th:unless="${n.enabled}">
+        <span class="tile-icon" th:text="${n.icon}">•</span>
+        <span class="tile-title" th:text="${n.label}">Title</span>
+        <span class="tile-text" th:text="${n.description}">Description</span>
+        <span class="tile-soon">Coming soon</span>
+      </div>
+    </th:block>
+  </section>
+</main>
+
+</body>
+</html>

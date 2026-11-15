@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head('Sign in')}"><title>Login</title></head>
+<body>
+
+<header class="topbar">
+    <a class="brand" th:href="@{/}">
+        <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
+        <span>HeyNeighbor</span>
+    </a>
+</header>
+
+<main class="narrow">
+    <section class="panel login-card">
+        <h1>Sign in</h1>
+        <p class="muted">Welcome back, neighbor.</p>
+
+        <p class="alert ok" th:if="${loggedOut}">You have been signed out.</p>
+        <p class="alert error" th:if="${error}" th:text="${error}" role="alert">Invalid email or password.</p>
+
+        <form th:action="@{/login}" method="post" class="stack">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="username" required autofocus
+                   th:value="${email}">
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <button class="submit" type="submit">Sign in</button>
+        </form>
+        <p class="muted small"><a th:href="@{/}">Back to the home page</a></p>
+    </section>
+</main>
+
+</body>
+</html>
