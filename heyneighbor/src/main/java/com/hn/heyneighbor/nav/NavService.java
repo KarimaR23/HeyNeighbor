@@ -37,11 +37,13 @@ public class NavService {
                     new NavItem("Organization Profile", "#", false, "🏢", "Hours, services and contact details"),
                     new NavItem("Feedback", "#", false, "⭐", "Reviews of your organization")),
             "moderator", List.of(
-                    new NavItem("Reported Listings", "/moderator/reports", true, "🚩", "Listings that neighbors have reported"),
-                    new NavItem("Moderation Cases", "#", false, "📁", "Open, review and close cases"),
-                    new NavItem("Reported Reviews and Messages", "#", false, "💬", "Content reported by users"),
-                    new NavItem("Restrictions", "#", false, "⛔", "Temporary limits placed on users"),
-                    new NavItem("Escalations", "#", false, "⬆️", "Send a case to a coordinator or administrator")),
+                    new NavItem("Reported Listings", "/moderator/reports", true, "🚩", "Review listings that have been reported"),
+                    new NavItem("Reported Users", "#", false, "👤", "Review reports about user conduct"),
+                    new NavItem("Reported Reviews", "#", false, "⭐", "Moderate reported ratings and comments"),
+                    new NavItem("Reported Messages", "#", false, "💬", "Review messages reported by users"),
+                    new NavItem("Moderation Cases", "#", false, "📁", "Create, update and close moderation cases"),
+                    new NavItem("Warnings and Restrictions", "#", false, "⛔", "Warn or temporarily restrict users"),
+                    new NavItem("Escalations", "#", false, "⬆️", "Send issues to a coordinator or administrator")),
             "support_coordinator", List.of(
                     new NavItem("Open Support Requests", "/support/requests", true, "🎧", "Search and browse requests that need help"),
                     new NavItem("Disputes", "#", false, "⚖️", "Exchange disputes and recommended resolutions"),

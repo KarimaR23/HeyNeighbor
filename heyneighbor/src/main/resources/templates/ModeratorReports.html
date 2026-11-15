@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Reported Listings</title></head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+  <h1>Reported Listings</h1>
+
+  <form class="filters" method="get" th:action="@{/moderator/reports}">
+    <input type="search" name="q" th:value="${q}" placeholder="Search listing, owner or reporter" aria-label="Search reports">
+    <select name="status" aria-label="Report status">
+      <option value="">All statuses</option>
+      <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == status}"></option>
+    </select>
+    <select name="reason" aria-label="Reason">
+      <option value="">All reasons</option>
+      <option th:each="x : ${reasons}" th:value="${x}" th:text="${x}" th:selected="${x == reason}"></option>
+    </select>
+    <button class="submit" type="submit">Search</button>
+    <a class="reset" th:href="@{/moderator/reports}">Clear</a>
+  </form>
+
+  <p class="count"><strong th:text="${#lists.size(rows)}">0</strong> report(s) found</p>
+
+  <div class="table-wrap" th:if="${!#lists.isEmpty(rows)}">
+    <table class="data">
+      <thead>
+      <tr><th>Report ID</th><th>Listing</th><th>Category</th><th>Owner</th><th>Reason</th><th>Details</th><th>Reported by</th><th>Date</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+      <tr th:each="r : ${rows}">
+        <td th:text="'#' + ${r.report_id}">#1</td>
+        <td th:text="${r.listing_title}">Listing</td>
+        <td th:text="${r.category_name}">Food</td>
+        <td th:text="${r.owner_name}">Owner</td>
+        <td th:text="${r.reason}">fraud</td>
+        <td th:text="${r.description}">Description</td>
+        <td th:text="${r.reporter_name}">Reporter</td>
+        <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}">Date</td>
+        <td><span class="pill" th:classappend="${'pill-' + r.report_status}" th:text="${r.report_status}">open</span></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="empty" th:if="${#lists.isEmpty(rows)}">No reported listings match your search.</p>
+</main>
+
+</body>
+</html>
