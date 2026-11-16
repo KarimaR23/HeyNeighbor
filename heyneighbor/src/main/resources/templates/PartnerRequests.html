@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Organization Requests</title></head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+<main class="wide">
+  <section class="welcome">
+    <h1>Requests for our goods and services</h1>
+    <p class="muted">Review requests submitted for your organization's listings.</p>
+    <p th:if="${organization != null}">
+      <strong th:text="${organization.org_name}">Organization</strong>
+      <span class="muted" th:text="${' · ' + organization.approval_status}">approved</span>
+    </p>
+  </section>
+
+  <p class="empty" th:if="${organization == null}">
+    No organization is linked to this Community Partner account yet.
+  </p>
+
+  <section th:if="${organization != null}">
+    <p class="count"><strong th:text="${#lists.size(requests)}">0</strong> request(s) found (up to 200 shown)</p>
+    <div class="tiles" th:if="${!#lists.isEmpty(requests)}">
+      <article class="tile" th:each="item : ${requests}">
+        <span class="tile-icon">📨</span>
+        <span class="tile-title" th:text="${item.listing_title}">Listing title</span>
+        <span class="tile-text"><strong>Request #:</strong> <span th:text="${item.request_id}">1</span></span>
+        <span class="tile-text"><strong>Status:</strong> <span th:text="${item.request_status}">pending</span></span>
+        <span class="tile-text"><strong>Requested by:</strong> <span th:text="${item.requester_name}">Neighbor</span></span>
+        <span class="tile-text" th:if="${item.quantity_requested != null}">
+          <strong>Quantity:</strong> <span th:text="${item.quantity_requested}">1</span>
+        </span>
+        <span class="tile-text"><strong>Submitted:</strong> <span th:text="${item.requested_at}">Date</span></span>
+        <span class="tile-text" th:if="${item.message != null and !#strings.isEmpty(item.message)}">
+          <strong>Message:</strong> <span th:text="${item.message}">Request message</span>
+        </span>
+      </article>
+    </div>
+    <p class="empty" th:if="${#lists.isEmpty(requests)}">No requests have been submitted for your organization's listings yet.</p>
+  </section>
+  <p class="muted">Approving requests, messaging, and managing resources will be available in a future sprint.</p>
+</main>
+</body>
+</html>

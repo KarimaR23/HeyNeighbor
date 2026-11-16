@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Browse Listings</title></head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+<main class="wide">
+  <h1>Browse your neighborhood</h1>
+  <p class="muted">Find available free goods, services, and trades shared by neighbors.</p>
+  <form class="filters" method="get" th:action="@{/community/listings}">
+    <input type="search" name="q" maxlength="100" th:value="${q}" placeholder="Search listings" aria-label="Search listings">
+    <select name="category" aria-label="Category">
+      <option value="">All categories</option>
+      <option th:each="c : ${categories}" th:value="${c.category_id}" th:text="${c.name}"
+              th:selected="${selectedCategory != null and selectedCategory == c.category_id}">Category</option>
+    </select>
+    <select name="radius" aria-label="Distance">
+      <option value="">Any distance</option>
+      <option th:each="mi : ${radiusOptions}" th:value="${mi}" th:text="${mi + ' miles'}"
+              th:selected="${selectedRadius != null and selectedRadius == mi}">5 miles</option>
+    </select>
+    <button class="submit" type="submit">Search</button>
+    <a class="reset" th:href="@{/community/listings}">Clear</a>
+  </form>
+  <p class="muted" th:if="${locationMissing}">Your account needs latitude and longitude in the database to search by distance. Choose “Any distance” for now.</p>
+  <p class="count"><strong th:text="${#lists.size(rows)}">0</strong> listing(s) found (up to 100 shown)</p>
+  <div class="tiles" th:if="${!#lists.isEmpty(rows)}">
+    <article class="tile" th:each="item : ${rows}">
+      <span class="tile-icon" th:text="${item.listing_type == 'trade' ? '🔁' : '🎁'}">🎁</span>
+      <span class="tile-title" th:text="${item.title}">Listing title</span>
+      <span class="tile-text" th:text="${item.description}">Description</span>
+      <span class="tile-text"><strong>Category:</strong> <span th:text="${item.category_name}">Food</span></span>
+      <span class="tile-text"><strong>Type:</strong> <span th:text="${item.listing_type}">gift</span>
+        · <span th:text="${item.offering_kind}">good</span></span>
+      <span class="tile-text"><strong>Posted by:</strong> <span th:text="${item.posted_by}">Neighbor</span></span>
+      <span class="tile-text"><strong>Location:</strong> <span th:text="${item.city != null ? item.city : item.postal_code}">City</span></span>
+      <span class="tile-text" th:if="${item.distance_miles != null}"><strong>Distance:</strong>
+        <span th:text="${#numbers.formatDecimal(item.distance_miles, 1, 1)}">2.5</span> miles</span>
+      <span class="tile-text"><strong>Fulfillment:</strong> <span th:text="${item.fulfillment_method}">Pickup</span></span>
+    </article>
+  </div>
+  <p class="empty" th:if="${#lists.isEmpty(rows)}">No active listings match your search.</p>
+  <p class="muted">Other features, including requests, messages, and favorites, are coming soon.</p>
+</main>
+</body>
+</html>
