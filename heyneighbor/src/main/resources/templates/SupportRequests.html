@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{Fragments :: head(${pageTitle})}">
     <title>Open Support Requests</title>
 </head>
+
 <body>
 
 <th:block th:replace="~{Fragments :: header}"></th:block>
@@ -12,12 +13,28 @@
 
     <h1>Open Support Requests</h1>
 
+    <form method="get"
+          th:action="@{/support/requests}"
+          style="margin-bottom:20px;">
+
+        <input type="text"
+               name="search"
+               th:value="${search}"
+               placeholder="Search subject or request type" />
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
     <p class="count">
         <strong th:text="${#lists.size(rows)}">0</strong>
         request(s) found
     </p>
 
-    <div class="table-wrap" th:if="${!#lists.isEmpty(rows)}">
+    <div class="table-wrap"
+         th:if="${!#lists.isEmpty(rows)}">
 
         <table class="data">
 
@@ -29,25 +46,59 @@
                 <th>Status</th>
                 <th>Priority</th>
                 <th>Created</th>
+                <th>Update Status</th>
             </tr>
             </thead>
 
             <tbody>
+
             <tr th:each="r : ${rows}">
+
                 <td th:text="${r.support_request_id}"></td>
+
                 <td th:text="${r.subject}"></td>
+
                 <td th:text="${r.request_type}"></td>
+
                 <td th:text="${r.status}"></td>
+
                 <td th:text="${r.priority}"></td>
+
                 <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}"></td>
+
+                <td>
+
+                    <form th:action="@{/support/update-status}"
+                          method="post">
+
+                        <input type="hidden"
+                               name="supportRequestId"
+                               th:value="${r.support_request_id}" />
+
+                        <select name="status">
+                            <option value="open">Open</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+
+                        <button type="submit">
+                            Update
+                        </button>
+
+                    </form>
+
+                </td>
+
             </tr>
+
             </tbody>
 
         </table>
 
     </div>
 
-    <p class="empty" th:if="${#lists.isEmpty(rows)}">
+    <p class="empty"
+       th:if="${#lists.isEmpty(rows)}">
         No open support requests found.
     </p>
 
