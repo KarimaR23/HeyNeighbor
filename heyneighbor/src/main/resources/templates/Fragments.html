@@ -29,9 +29,9 @@
             <a th:if="${n.enabled}" th:href="@{${n.href}}">
                 <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
             </a>
-            <span th:unless="${n.enabled}" class="soon" title="Coming soon">
-        <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
-      </span>
+            <a th:unless="${n.enabled}" href="#" onclick="return false;">
+                <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
+            </a>
         </th:block>
     </nav>
 </th:block>

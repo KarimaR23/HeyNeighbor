@@ -20,12 +20,12 @@
         <span class="tile-text" th:text="${n.description}">Description</span>
         <span class="tile-go">Open →</span>
       </a>
-      <div class="tile off" th:unless="${n.enabled}">
+      <a class="tile" th:unless="${n.enabled}" href="#" onclick="return false;">
         <span class="tile-icon" th:text="${n.icon}">•</span>
         <span class="tile-title" th:text="${n.label}">Title</span>
         <span class="tile-text" th:text="${n.description}">Description</span>
-        <span class="tile-soon">Coming soon</span>
-      </div>
+        <span class="tile-go">Open →</span>
+      </a>
     </th:block>
   </section>
 </main>
