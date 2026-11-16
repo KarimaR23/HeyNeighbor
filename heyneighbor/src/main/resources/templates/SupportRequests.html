@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{Fragments :: head(${pageTitle})}">
-    <title>Open Support Requests</title>
+    <title>Support Requests</title>
 </head>
 
 <body>
@@ -11,10 +11,31 @@
 
 <main class="wide">
 
-    <h1>Open Support Requests</h1>
+    <h1 th:text="${pageTitle}">
+        Support Requests
+    </h1>
+
+    <p style="margin-bottom:20px;">
+
+        <a th:href="@{/support/requests}">
+            Open Requests
+        </a>
+
+        |
+
+        <a th:href="@{/support/in-progress}">
+            In Progress Requests
+        </a>
+
+        |
+
+        <a th:href="@{/support/resolved}">
+            Resolved Requests
+        </a>
+
+    </p>
 
     <form method="get"
-          th:action="@{/support/requests}"
           style="margin-bottom:20px;">
 
         <input type="text"
@@ -99,7 +120,7 @@
 
     <p class="empty"
        th:if="${#lists.isEmpty(rows)}">
-        No open support requests found.
+        No support requests found.
     </p>
 
 </main>

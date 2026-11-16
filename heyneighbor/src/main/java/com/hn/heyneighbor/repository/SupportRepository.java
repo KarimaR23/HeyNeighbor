@@ -15,7 +15,9 @@ public class SupportRepository {
         this.jdbc = jdbc;
     }
 
-    public List<Map<String, Object>> searchOpenSupportRequests(String search) {
+    public List<Map<String, Object>> searchSupportRequests(
+            String search,
+            String status) {
 
         if (search == null || search.isBlank()) {
 
@@ -29,10 +31,11 @@ public class SupportRepository {
                         priority,
                         created_at
                     FROM support_request
-                    WHERE status = 'open'
+                    WHERE status = ?
                     ORDER BY created_at DESC
                     LIMIT 200
-                    """
+                    """,
+                    status
             );
         }
 
@@ -46,7 +49,7 @@ public class SupportRepository {
                     priority,
                     created_at
                 FROM support_request
-                WHERE status = 'open'
+                WHERE status = ?
                 AND (
                     LOWER(subject) LIKE LOWER(?)
                     OR LOWER(request_type) LIKE LOWER(?)
@@ -54,6 +57,7 @@ public class SupportRepository {
                 ORDER BY created_at DESC
                 LIMIT 200
                 """,
+                status,
                 "%" + search + "%",
                 "%" + search + "%"
         );
