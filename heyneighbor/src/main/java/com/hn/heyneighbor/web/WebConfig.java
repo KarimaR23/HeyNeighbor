@@ -17,12 +17,12 @@ public class WebConfig implements WebMvcConfigurer {
         this.authInterceptor = authInterceptor;
     }
 
-    /** Every page needs a signed-in user except the public home page, sign-in and static files. */
+    /** Every page needs a signed-in user except the public home page, sign-in, sign-up and static files. */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/login", "/css/**", "/images/**", "/js/**",
+                .excludePathPatterns("/", "/login", "/signup", "/css/**", "/images/**", "/js/**",
                         "/error", "/error/**", "/favicon.ico");
     }
 

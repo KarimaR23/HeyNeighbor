@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head('Sign up')}"></head>
+<body>
+
+<header class="topbar">
+    <a class="brand" th:href="@{/}">
+        <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
+        <span>HeyNeighbor</span>
+    </a>
+    <nav class="links"><a class="btn" th:href="@{/login}">Login</a></nav>
+</header>
+
+<main class="medium">
+    <section class="panel login-card">
+        <h1>Join HeyNeighbor</h1>
+        <p class="muted">Give freely, share locally. It only takes a minute.</p>
+
+        <div class="alert error" th:if="${errors != null and !#lists.isEmpty(errors)}" role="alert">
+            <ul class="error-list">
+                <li th:each="e : ${errors}" th:text="${e}">Problem</li>
+            </ul>
+        </div>
+
+        <form th:action="@{/signup}" method="post" class="stack" id="signup-form">
+
+            <p class="step-label">I am joining as</p>
+            <div class="role-choice">
+                <label class="role-card">
+                    <input type="radio" name="role" value="community_user" th:checked="${form.role == 'community_user'}">
+                    <span class="role-body">
+            <strong>🙂 Community user</strong>
+            <small>Give away, trade or request items and services.</small>
+          </span>
+                </label>
+                <label class="role-card">
+                    <input type="radio" name="role" value="community_partner" th:checked="${form.role == 'community_partner'}">
+                    <span class="role-body">
+            <strong>🏢 Community partner</strong>
+            <small>A pantry, shelter, church or business sharing resources.</small>
+          </span>
+                </label>
+                <label class="role-card">
+                    <input type="radio" name="role" value="support_coordinator" th:checked="${form.role == 'support_coordinator'}">
+                    <span class="role-body">
+            <strong>🛟 Support coordinator</strong>
+            <small>Answer and resolve support requests from the community.</small>
+          </span>
+                </label>
+            </div>
+            <p class="muted small">Your role is set when you sign up. Only a support request approved by an administrator can change it later.</p>
+
+            <label for="displayName">Your name</label>
+            <input id="displayName" name="displayName" type="text" maxlength="100" required autocomplete="name"
+                   th:value="${form.displayName}">
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" maxlength="255" required autocomplete="username"
+                   th:value="${form.email}">
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" minlength="8" required autocomplete="new-password">
+            <span class="muted small">At least 8 characters.</span>
+
+            <label for="confirmPassword">Confirm password</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" minlength="8" required autocomplete="new-password">
+
+            <label for="postalCode">ZIP code</label>
+            <input id="postalCode" name="postalCode" type="text" inputmode="numeric" pattern="\d{5}(-\d{4})?" maxlength="10" required
+                   autocomplete="postal-code" th:value="${form.postalCode}">
+            <span class="muted small">We use it to show what is near you.</span>
+
+            <div class="two-col">
+                <div>
+                    <label for="city">City</label>
+                    <input id="city" name="city" type="text" maxlength="100" autocomplete="address-level2" th:value="${form.city}">
+                </div>
+                <div>
+                    <label for="state">State</label>
+                    <input id="state" name="state" type="text" maxlength="50" autocomplete="address-level1" th:value="${form.state}">
+                </div>
+            </div>
+
+            <!-- Only for community partners -->
+            <fieldset class="org-fields" id="org-fields">
+                <legend>Your organization</legend>
+                <p class="muted small">An administrator reviews new organizations before they appear as approved partners.</p>
+
+                <label for="orgName">Organization name</label>
+                <input id="orgName" name="orgName" type="text" maxlength="150" th:value="${form.orgName}">
+
+                <label for="orgType">Type</label>
+                <select id="orgType" name="orgType">
+                    <option value="">Choose a type</option>
+                    <option th:each="t : ${orgTypes}" th:value="${t}" th:text="${#strings.replace(t, '_', ' ')}"
+                            th:selected="${t == form.orgType}">type</option>
+                </select>
+
+                <label for="streetAddress">Street address</label>
+                <input id="streetAddress" name="streetAddress" type="text" maxlength="200" th:value="${form.streetAddress}">
+                <span class="muted small">City, state and ZIP above are used as the organization's address.</span>
+            </fieldset>
+
+            <button class="submit" type="submit">Create account</button>
+        </form>
+
+        <p class="muted small">Already have an account? <a th:href="@{/login}">Sign in</a></p>
+    </section>
+</main>
+
+<script>
+    // Convenience only: show the organization boxes for partners. The server checks the rules again.
+    (function () {
+        const form = document.getElementById('signup-form');
+        const org = document.getElementById('org-fields');
+        const fields = ['orgName', 'orgType', 'streetAddress'].map(function (id) {
+            return document.getElementById(id);
+        });
+
+        function update() {
+            const partner = form.elements['role'].value === 'community_partner';
+            org.style.display = partner ? 'block' : 'none';
+            fields.forEach(function (f) { f.required = partner; });
+            document.getElementById('city').required = partner;
+            document.getElementById('state').required = partner;
+        }
+        form.addEventListener('change', update);
+        update();
+    })();
+</script>
+
+</body>
+</html>

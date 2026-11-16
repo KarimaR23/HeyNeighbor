@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{Fragments :: head('Sign in')}"><title>Login</title></head>
+<head th:replace="~{Fragments :: head('Sign in')}"></head>
 <body>
 
 <header class="topbar">
     <a class="brand" th:href="@{/}">
-        <img src="/images/logo.png" th:src="@{/images/logo.png}" alt="HeyNeighbor logo" width="40" height="40">
+        <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
         <span>HeyNeighbor</span>
     </a>
 </header>
@@ -16,6 +16,8 @@
         <p class="muted">Welcome back, neighbor.</p>
 
         <p class="alert ok" th:if="${loggedOut}">You have been signed out.</p>
+        <p class="alert ok" th:if="${registered}">Your account is ready. Sign in below.</p>
+        <p class="alert ok" th:if="${pending}">Thanks for signing up. An administrator needs to activate your account before you can sign in.</p>
         <p class="alert error" th:if="${error}" th:text="${error}" role="alert">Invalid email or password.</p>
 
         <form th:action="@{/login}" method="post" class="stack">
@@ -28,6 +30,7 @@
 
             <button class="submit" type="submit">Sign in</button>
         </form>
+        <p class="muted small">New here? <a th:href="@{/signup}">Create an account</a></p>
         <p class="muted small"><a th:href="@{/}">Back to the home page</a></p>
     </section>
 </main>

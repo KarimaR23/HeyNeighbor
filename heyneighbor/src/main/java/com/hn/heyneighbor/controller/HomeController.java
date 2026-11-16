@@ -37,7 +37,7 @@ public class HomeController {
         model.addAttribute("authItems", signedIn
                 ? List.of(new NavItem("My Dashboard", "/dashboard"))
                 : List.of(new NavItem("Login", "/login"),
-                new NavItem("Sign Up Here", "#")));
+                new NavItem("Sign Up Here", "/signup")));
 
         model.addAttribute("categories", List.of(
                 new Category("Food", "🥕"),
