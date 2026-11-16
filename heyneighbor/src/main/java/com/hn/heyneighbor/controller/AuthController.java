@@ -26,12 +26,16 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginForm(@RequestParam(name = "logout", required = false) String logout,
+                            @RequestParam(name = "registered", required = false) String registered,
+                            @RequestParam(name = "pending", required = false) String pending,
                             HttpServletRequest request, Model model) {
         SessionUser user = CurrentUser.get(request);
         if (user != null) {
             return "redirect:" + RoleHome.homeFor(user.roleName());
         }
         model.addAttribute("loggedOut", logout != null);
+        model.addAttribute("registered", registered != null);
+        model.addAttribute("pending", pending != null);
         return "Login";
     }
 

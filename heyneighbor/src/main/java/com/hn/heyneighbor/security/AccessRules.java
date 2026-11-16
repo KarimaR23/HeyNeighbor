@@ -22,7 +22,7 @@ public final class AccessRules {
             new Rule("/community", "listing.browse"),
             new Rule("/partner", "request.view_org"),
             new Rule("/moderator", "report.view_listing"),
-            new Rule("/support", "support.view_open"));
+            new Rule("/support", "support.respond"));
 
     /** Pages every signed-in, active user may open. */
     private static final Set<String> COMMON = Set.of("/dashboard", "/logout");

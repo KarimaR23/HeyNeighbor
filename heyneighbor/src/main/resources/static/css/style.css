@@ -316,3 +316,24 @@ table.data tr:last-child td { border-bottom:none; }
 .pill-suspended, .pill-banned, .pill-declined, .pill-rejected, .pill-hidden, .pill-removed, .pill-escalated, .pill-urgent, .pill-high { background:#fee2e2; color:#991b1b; }
 .pill-deactivated, .pill-dismissed, .pill-closed, .pill-withdrawn, .pill-expired, .pill-low { background:var(--grey); color:#374151; }
 .pill-reason { background:#ede9fe; color:#5b21b6; }
+
+
+
+
+
+
+
+
+/* Sprint IV: sign-up page */
+.error-list { margin:0; padding-left:1.2rem; }
+.step-label { margin:.5rem 0 0; font-weight:600; }
+.role-choice { display:grid; grid-template-columns:1fr 1fr 1fr; gap:.75rem; }
+.role-card { display:block; cursor:pointer; }
+.role-card input { position:absolute; opacity:0; pointer-events:none; }
+.role-body { display:flex; flex-direction:column; gap:.25rem; height:100%; padding:.8rem; border:2px solid #d1d5db; border-radius:10px; background:#fff; }
+.role-body small { color:var(--grey-dark); }
+.role-card input:checked + .role-body { border-color:#2563eb; background:#eff6ff; }
+.role-card input:focus-visible + .role-body { outline:3px solid #93c5fd; }
+.org-fields { border:1px solid #d1d5db; border-radius:10px; padding:.75rem 1rem 1rem; display:none; }
+.org-fields legend { font-weight:600; padding:0 .4rem; }
+@media (max-width:700px) { .role-choice, .two-col { grid-template-columns:1fr; } }
