@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}">
+    <title>Open Support Requests</title>
+</head>
+<body>
+
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+
+    <h1>Open Support Requests</h1>
+
+    <p class="count">
+        <strong th:text="${#lists.size(rows)}">0</strong>
+        request(s) found
+    </p>
+
+    <div class="table-wrap" th:if="${!#lists.isEmpty(rows)}">
+
+        <table class="data">
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Subject</th>
+                <th>Request Type</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Created</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="r : ${rows}">
+                <td th:text="${r.support_request_id}"></td>
+                <td th:text="${r.subject}"></td>
+                <td th:text="${r.request_type}"></td>
+                <td th:text="${r.status}"></td>
+                <td th:text="${r.priority}"></td>
+                <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}"></td>
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <p class="empty" th:if="${#lists.isEmpty(rows)}">
+        No open support requests found.
+    </p>
+
+</main>
+
+</body>
+</html>
