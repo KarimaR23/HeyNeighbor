@@ -87,7 +87,12 @@
     </p>
     <p class="cu-wants" th:if="${item.listing_type == 'trade' and item.trade_wanted != null}">
       Looking for: <span th:text="${item.trade_wanted}">a monitor</span></p>
-    <p class="giver">Posted by <span th:text="${item.posted_by}">Neighbor</span></p>
+    <div class="cu-poster">
+      <img class="cu-poster-pic" th:if="${item.poster_avatar != null}" th:src="${item.poster_avatar}" alt="" width="26" height="26">
+      <span class="cu-poster-pic" th:if="${item.poster_avatar == null}" th:style="'background:' + ${item.poster_color}"
+            th:text="${item.poster_initial}" aria-hidden="true">R</span>
+      <span class="cu-poster-name" th:text="${item.posted_by}">Rosa Mendez</span>
+    </div>
   </div>
 </article>
 

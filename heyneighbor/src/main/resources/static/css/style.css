@@ -402,3 +402,9 @@ body.cu { background:var(--white); }
     .cu-me-name { display:none; }
     .cu-main { padding:1.25rem 1rem 2.5rem; }
 }
+
+/* who posted a listing: profile picture (or initial) and name */
+.cu-poster { display:flex; align-items:center; gap:.5rem; margin-top:.5rem; }
+.cu-poster-pic { flex:none; width:26px; height:26px; border-radius:50%; object-fit:cover;
+    display:flex; align-items:center; justify-content:center; color:var(--white); font-size:.75rem; font-weight:700; }
+.cu-poster-name { font-size:.85rem; font-weight:600; color:var(--black); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }

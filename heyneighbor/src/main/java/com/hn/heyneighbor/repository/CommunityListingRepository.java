@@ -26,6 +26,8 @@ public class CommunityListingRepository {
                    l.city, l.postal_code, l.quantity_available, l.availability_notes,
                    l.listing_images, c.name AS category_name,
                    COALESCE(o.org_name, owner.display_name) AS posted_by,
+                   -- organizations have no picture of their own, so show their initial instead of the manager's photo
+                   CASE WHEN l.organization_id IS NULL THEN owner.avatar_image END AS poster_avatar,
                    fm.method_name AS fulfillment_method,
             """ + DISTANCE + " AS distance_miles\n";
 
