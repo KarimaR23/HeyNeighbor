@@ -26,7 +26,7 @@ public class CommunityListingController {
         SessionUser user = CurrentUser.get(request);
         String query = q == null ? "" : q.trim();
         if (query.length() > 100) query = query.substring(0, 100);
-        Integer safeRadius = List.of(5, 10, 25, 50).contains(radius) ? radius : null;
+        Integer safeRadius = radius != null && List.of(5, 10, 25, 50).contains(radius) ? radius : null;
         var categories = listings.categories();
         Integer safeCategory = category != null && categories.stream()
                 .anyMatch(c -> category.equals(((Number) c.get("category_id")).intValue())) ? category : null;
