@@ -16,7 +16,6 @@
             <span>HeyNeighbor</span>
         </a>
         <div class="who">
-            <span class="role-chip" th:text="${currentUser.roleLabel}">Role</span>
             <span class="who-name" th:text="${currentUser.displayName}">Name</span>
             <form th:action="@{/logout}" method="post">
                 <button class="btn" type="submit">Sign out</button>
@@ -24,16 +23,22 @@
         </div>
     </header>
 
-    <nav class="subnav" aria-label="Role navigation">
+    <!-- Left menu for this role, like the Figma screens. Options come from NavService (functional requirements). -->
+    <aside class="side-nav" aria-label="Role navigation">
+        <p class="side-nav-role" th:text="${currentUser.roleLabel}">Role</p>
+        <a th:href="@{${homePath}}" th:classappend="${currentPath == homePath} ? 'on'">
+            <span>🏠</span> <span>Home</span>
+        </a>
         <th:block th:each="n : ${roleNav}">
-            <a th:if="${n.enabled}" th:href="@{${n.href}}">
+            <a th:if="${n.enabled}" th:href="@{${n.href}}"
+               th:classappend="${#strings.startsWith(currentPath, n.href)} ? 'on'">
                 <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
             </a>
             <a th:unless="${n.enabled}" href="#" onclick="return false;">
                 <span th:text="${n.icon}">•</span> <span th:text="${n.label}">Link</span>
             </a>
         </th:block>
-    </nav>
+    </aside>
 </th:block>
 
 </body>

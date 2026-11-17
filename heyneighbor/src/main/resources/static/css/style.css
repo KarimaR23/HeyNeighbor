@@ -408,3 +408,24 @@ body.cu { background:var(--white); }
 .cu-poster-pic { flex:none; width:26px; height:26px; border-radius:50%; object-fit:cover;
     display:flex; align-items:center; justify-content:center; color:var(--white); font-size:.75rem; font-weight:700; }
 .cu-poster-name { font-size:.85rem; font-weight:600; color:var(--black); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ============================================================
+   Role sidebar (Admin, Community Partner, Moderator, Support Coordinator)
+   Same left menu as the Community User pages and the Figma screens.
+   ============================================================ */
+.side-nav { position:fixed; top:64px; bottom:0; left:0; width:230px; z-index:5; overflow-y:auto;
+    display:flex; flex-direction:column; gap:.15rem; padding:1.25rem 1rem; background:var(--white); border-right:1px solid var(--grey); }
+.side-nav-role { margin:0 0 .75rem .6rem; color:var(--blue); font-weight:800; font-size:.95rem; }
+.side-nav a { display:flex; align-items:center; gap:.6rem; padding:.55rem .7rem; border-radius:10px; color:var(--black); font-size:.95rem; }
+.side-nav a:hover { background:var(--grey-light); }
+.side-nav a.on { background:var(--grey-light); color:var(--red); font-weight:700; }
+/* page content sits to the right of the sidebar */
+body:has(> .side-nav) > main { margin-left:calc(230px + 2rem); margin-right:2rem; max-width:1100px; }
+
+@media (max-width: 860px) {
+    .side-nav { position:static; width:auto; flex-direction:row; overflow-x:auto; padding:.6rem 1rem;
+        border-right:none; border-bottom:1px solid var(--grey); }
+    .side-nav-role { display:none; }
+    .side-nav a { white-space:nowrap; }
+    body:has(> .side-nav) > main { margin-left:auto; margin-right:auto; }
+}
