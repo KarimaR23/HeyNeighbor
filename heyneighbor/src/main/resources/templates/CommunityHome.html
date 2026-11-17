@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Home</title></head>
+<body class="cu">
+<th:block th:replace="~{CommunityFragments :: top}"></th:block>
+
+<div class="cu-shell">
+  <aside th:replace="~{CommunityFragments :: side}"></aside>
+
+  <main class="cu-main">
+    <section class="hero cu-hero">
+      <div class="hero-text">
+        <h1>Welcome back, <span th:text="${currentUser.displayName}">Neighbor</span></h1>
+        <p>See what your neighbors are giving away and trading near you.</p>
+        <div class="cta">
+          <a class="btn primary big" href="#" onclick="return false;">Post a listing</a>
+          <a class="btn big" th:href="@{/community/listings}">Browse your neighborhood</a>
+        </div>
+      </div>
+      <img class="hero-logo" src="/images/logo.png" th:src="@{/images/logo.png}" alt="">
+    </section>
+
+    <section class="cu-section">
+      <div class="cu-section-head">
+        <h2>Explore</h2>
+        <a th:href="@{/community/listings}">See all →</a>
+      </div>
+      <div class="cu-row" th:if="${!#lists.isEmpty(explore)}">
+        <th:block th:each="item : ${explore}"><article th:replace="~{CommunityFragments :: card(${item})}"></article></th:block>
+      </div>
+      <p class="cu-empty" th:if="${#lists.isEmpty(explore)}">No listings near you yet.</p>
+    </section>
+
+    <section class="cu-section" th:if="${!#lists.isEmpty(recent)}">
+      <div class="cu-section-head">
+        <h2>Still interested?</h2>
+      </div>
+      <div class="cu-row">
+        <th:block th:each="item : ${recent}"><article th:replace="~{CommunityFragments :: card(${item})}"></article></th:block>
+      </div>
+    </section>
+
+    <section class="cu-section">
+      <div class="cu-section-head">
+        <h2>Trades looking for goods or services</h2>
+        <a th:href="@{/community/listings}">See all →</a>
+      </div>
+      <div class="cu-row" th:if="${!#lists.isEmpty(trades)}">
+        <th:block th:each="item : ${trades}"><article th:replace="~{CommunityFragments :: card(${item})}"></article></th:block>
+      </div>
+      <p class="cu-empty" th:if="${#lists.isEmpty(trades)}">No trade offers right now.</p>
+    </section>
+  </main>
+</div>
+
+<footer><p>Hey Neighbor.</p></footer>
+</body>
+</html>

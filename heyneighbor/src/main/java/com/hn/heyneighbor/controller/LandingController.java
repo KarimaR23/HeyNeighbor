@@ -24,7 +24,8 @@ public class LandingController {
         return "redirect:" + RoleHome.homeFor(Objects.requireNonNull(user).roleName());
     }
 
-    @GetMapping({"/admin", "/community", "/partner", "/moderator", "/support"})
+    // "/community" has its own home page (CommunityListingController)
+    @GetMapping({"/admin", "/partner", "/moderator", "/support"})
     public String landing(HttpServletRequest request, Model model) {
         SessionUser user = CurrentUser.get(request);
         model.addAttribute("pageTitle", Objects.requireNonNull(user).roleLabel() + " Home");
