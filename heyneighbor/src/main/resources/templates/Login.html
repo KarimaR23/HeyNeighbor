@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{Fragments :: head('Sign in')}"></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign in | HeyNeighbor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
 
 <header class="topbar">
     <a class="brand" th:href="@{/}">
-        <img src="/images/logo.png" th:src="@{/images/logo.png}" alt="HeyNeighbor logo" width="40" height="40">
+        <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
         <span>HeyNeighbor</span>
     </a>
 </header>

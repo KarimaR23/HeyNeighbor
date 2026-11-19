@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{Fragments :: head('Sign up')}"></head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign up | HeyNeighbor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
 
 <header class="topbar">
     <a class="brand" th:href="@{/}">
-        <img src="/images/logo.png" th:src="@{/images/logo.png}" alt="HeyNeighbor logo" width="40" height="40">
+        <img src="https://cdn-icons-png.flaticon.com/512/18274/18274068.png" alt="" width="34" height="34">
         <span>HeyNeighbor</span>
     </a>
     <nav class="links"><a class="btn" th:href="@{/login}">Login</a></nav>
@@ -29,23 +34,23 @@
                 <label class="role-card">
                     <input type="radio" name="role" value="community_user" th:checked="${form.role == 'community_user'}">
                     <span class="role-body">
-            <strong>🙂 Community user</strong>
-            <small>Give away, trade or request items and services.</small>
-          </span>
+                        <strong>🙂 Community user</strong>
+                        <small>Give away, trade or request items and services.</small>
+                    </span>
                 </label>
                 <label class="role-card">
                     <input type="radio" name="role" value="community_partner" th:checked="${form.role == 'community_partner'}">
                     <span class="role-body">
-            <strong>🏢 Community partner</strong>
-            <small>A pantry, shelter, church or business sharing resources.</small>
-          </span>
+                        <strong>🏢 Community partner</strong>
+                        <small>A pantry, shelter, church or business sharing resources.</small>
+                    </span>
                 </label>
                 <label class="role-card">
                     <input type="radio" name="role" value="support_coordinator" th:checked="${form.role == 'support_coordinator'}">
                     <span class="role-body">
-            <strong>🛟 Support coordinator</strong>
-            <small>Answer and resolve support requests from the community.</small>
-          </span>
+                        <strong>🛟 Support coordinator</strong>
+                        <small>Answer and resolve support requests from the community.</small>
+                    </span>
                 </label>
             </div>
             <p class="muted small">Your role is set when you sign up. Only a support request approved by an administrator can change it later.</p>

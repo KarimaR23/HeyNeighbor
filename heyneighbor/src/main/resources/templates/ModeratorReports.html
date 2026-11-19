@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Reported Listings</title></head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle} + ' | HeyNeighbor'">Title</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
 <th:block th:replace="~{Fragments :: header}"></th:block>
 
 <main class="wide">
   <h1>Reported Listings</h1>
+
+  <p class="alert error" th:if="${error}" th:text="${error}">Problem.</p>
 
   <form class="filters" method="get" th:action="@{/moderator/reports}">
     <input type="search" name="q" th:value="${q}" placeholder="Search listing, owner or reporter" aria-label="Search reports">
@@ -27,7 +33,7 @@
   <div class="table-wrap" th:if="${!#lists.isEmpty(rows)}">
     <table class="data">
       <thead>
-      <tr><th>Report ID</th><th>Listing</th><th>Category</th><th>Owner</th><th>Reason</th><th>Details</th><th>Reported by</th><th>Date</th><th>Status</th></tr>
+      <tr><th>Report ID</th><th>Listing</th><th>Category</th><th>Owner</th><th>Reason</th><th>Details</th><th>Reported by</th><th>Date</th><th>Status</th><th></th></tr>
       </thead>
       <tbody>
       <tr th:each="r : ${rows}">
@@ -40,6 +46,7 @@
         <td th:text="${r.reporter_name}">Reporter</td>
         <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}">Date</td>
         <td><span class="pill" th:classappend="${'pill-' + r.report_status}" th:text="${r.report_status}">open</span></td>
+        <td><a class="btn-grey" th:href="@{/moderator/reports/{id}(id=${r.report_id})}">Review</a></td>
       </tr>
       </tbody>
     </table>

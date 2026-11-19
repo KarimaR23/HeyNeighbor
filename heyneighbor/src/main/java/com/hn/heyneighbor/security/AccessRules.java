@@ -18,6 +18,7 @@ public final class AccessRules {
             // more specific paths first: the first matching rule wins
             new Rule("/admin/categories", "category.manage"),
             new Rule("/admin/reports", "report.generate"),
+            new Rule("/admin/account-status", "account.change_status"),
             new Rule("/admin", "user.list"),
             new Rule("/community", "listing.browse"),
             new Rule("/partner", "request.view_org"),

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle} + ' | HeyNeighbor'">Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+    <h1>Manage Users</h1>
+
+    <p class="alert ok" th:if="${message}" th:text="${message}">Saved.</p>
+    <p class="alert error" th:if="${error}" th:text="${error}">Problem.</p>
+
+    <form class="filters" method="get" th:action="@{/admin/users}">
+        <input type="search" name="q" th:value="${q}" placeholder="Search name or email" aria-label="Search users">
+        <select name="role" aria-label="Role">
+            <option value="">All roles</option>
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}" th:selected="${r == role}"></option>
+        </select>
+        <select name="status" aria-label="Account status">
+            <option value="">All statuses</option>
+            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == status}"></option>
+        </select>
+        <button class="submit" type="submit">Search</button>
+        <a class="reset" th:href="@{/admin/users}">Clear</a>
+    </form>
+
+    <p class="count"><strong th:text="${#lists.size(rows)}">0</strong> user(s) found</p>
+
+    <div class="table-wrap" th:if="${!#lists.isEmpty(rows)}">
+        <table class="data">
+            <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Verified</th><th>City</th><th>Joined</th><th>Last sign-in</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="r : ${rows}">
+                <td th:text="${r.display_name}">Name</td>
+                <td th:text="${r.email}">email</td>
+                <td th:text="${r.role_name}">role</td>
+                <td><span class="pill" th:classappend="${'pill-' + r.account_status}" th:text="${r.account_status}">active</span></td>
+                <td th:text="${r.email_verified} ? 'Yes' : 'No'">Yes</td>
+                <td><span th:text="${r.city}">City</span><span th:if="${r.state != null}">, <span th:text="${r.state}">GA</span></span></td>
+                <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}">Date</td>
+                <td th:text="${r.last_login_at != null} ? ${#dates.format(r.last_login_at, 'MMM d, yyyy')} : 'Never'">Date</td>
+                <td><a class="btn-grey" th:href="@{/admin/users/{id}(id=${r.user_id})}">Manage</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="empty" th:if="${#lists.isEmpty(rows)}">No users match your search.</p>
+</main>
+
+</body>
+</html>

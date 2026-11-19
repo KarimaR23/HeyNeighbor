@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle} + ' | HeyNeighbor'">Title</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="wide">
+  <p class="back-link"><a th:href="@{/moderator/reports}">&larr; Back to Reported Listings</a></p>
+  <h1>Review report</h1>
+
+  <p class="alert ok" th:if="${message}" th:text="${message}">Saved.</p>
+  <div class="alert error" th:if="${errors != null and !#lists.isEmpty(errors)}" role="alert">
+    <ul class="error-list"><li th:each="e : ${errors}" th:text="${e}">Problem</li></ul>
+  </div>
+
+  <div class="detail-grid">
+
+    <section class="panel">
+      <h2>The report</h2>
+      <dl class="kv">
+        <dt>Report</dt><dd>#<span th:text="${report.report_id}">1</span></dd>
+        <dt>Status</dt>
+        <dd><span class="pill" th:classappend="${'pill-' + report.report_status}" th:text="${report.report_status}">open</span></dd>
+        <dt>Reason</dt><dd><span class="pill pill-reason" th:text="${report.reason}">spam</span></dd>
+        <dt>Details</dt><dd th:text="${report.description != null} ? ${report.description} : 'No details given'">Details</dd>
+        <dt>Reported by</dt><dd th:text="${report.reporter_name}">Reporter</dd>
+        <dt>Reported on</dt><dd th:text="${#dates.format(report.created_at, 'MMM d, yyyy h:mm a')}">Date</dd>
+        <dt th:if="${report.resolved_at != null}">Decided on</dt>
+        <dd th:if="${report.resolved_at != null}" th:text="${#dates.format(report.resolved_at, 'MMM d, yyyy h:mm a')}">Date</dd>
+      </dl>
+    </section>
+
+    <section class="panel">
+      <h2>The listing</h2>
+      <dl class="kv">
+        <dt>Title</dt><dd th:text="${report.listing_title}">Listing</dd>
+        <dt>Status</dt>
+        <dd><span class="pill" th:classappend="${'pill-' + report.listing_status}" th:text="${report.listing_status}">active</span></dd>
+        <dt>Owner</dt><dd><span th:text="${report.listing_owner}">Owner</span> <span class="muted small" th:text="${'(' + report.owner_email + ')'}">(email)</span></dd>
+        <dt>Category</dt><dd th:text="${report.category_name}">Category</dd>
+        <dt>Type</dt><dd><span th:text="${report.listing_type}">gift</span> / <span th:text="${report.offering_kind}">good</span></dd>
+        <dt>Where</dt><dd><span th:text="${report.listing_city}">City</span> <span th:text="${report.listing_postal_code}">30303</span></dd>
+        <dt>Posted</dt><dd th:text="${#dates.format(report.listing_created_at, 'MMM d, yyyy')}">Date</dd>
+        <dt>Description</dt><dd th:text="${report.listing_description}">Description</dd>
+      </dl>
+    </section>
+  </div>
+
+  <section class="panel" th:if="${!#lists.isEmpty(others)}">
+    <h2>Other reports on this listing</h2>
+    <ul class="plain-list">
+      <li th:each="o : ${others}">
+        <a th:href="@{/moderator/reports/{id}(id=${o.report_id})}">Report #<span th:text="${o.report_id}">2</span></a>
+        &middot; <span th:text="${o.reason}">spam</span>
+        &middot; <span class="pill" th:classappend="${'pill-' + o.report_status}" th:text="${o.report_status}">open</span>
+        &middot; by <span th:text="${o.reporter_name}">Name</span>,
+        <span th:text="${#dates.format(o.created_at, 'MMM d, yyyy')}">Date</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Already decided: read-only summary of the case -->
+  <section class="panel" th:if="${decided}">
+    <h2>Decision</h2>
+    <dl class="kv">
+      <dt>Case</dt><dd th:text="${report.case_title != null} ? ${report.case_title} : 'No case was opened'">Case</dd>
+      <dt>Case status</dt>
+      <dd><span class="pill" th:classappend="${'pill-' + report.case_status}" th:if="${report.case_status != null}" th:text="${report.case_status}">closed</span></dd>
+      <dt>Moderator</dt><dd th:text="${report.moderator_name}">Moderator</dd>
+      <dt>Action</dt><dd th:text="${report.action_type != null} ? ${report.action_type} : 'None recorded'">Action</dd>
+      <dt>Findings</dt><dd th:text="${report.findings}">Findings</dd>
+      <dt>Resolution</dt><dd th:text="${report.resolution}">Resolution</dd>
+    </dl>
+    <p class="muted small">This report has been decided and can no longer be changed.</p>
+  </section>
+
+  <!-- Still open: the moderator records findings and a decision -->
+  <section class="panel" th:unless="${decided}">
+    <h2>Your review</h2>
+    <p class="muted" th:if="${report.case_id != null}">
+      Case: <span th:text="${report.case_title}">Case</span> &middot; under review by <span th:text="${report.moderator_name}">Moderator</span>
+    </p>
+
+    <form th:action="@{/moderator/reports/{id}/decision(id=${report.report_id})}" method="post" class="stack">
+
+      <label for="findings">Findings</label>
+      <textarea id="findings" name="findings" rows="4" maxlength="2000" th:text="${form.findings}"
+                placeholder="What did you find when you reviewed the listing?"></textarea>
+
+      <label for="action">Action</label>
+      <select id="action" name="action">
+        <option value="">Choose an action</option>
+        <option th:each="a : ${actions}" th:value="${a}" th:selected="${a == form.action}"
+                th:text="${#strings.replace(a, '_', ' ')}">action</option>
+      </select>
+      <span class="muted small">Hiding or removing takes effect when you close the case.</span>
+
+      <label for="resolution">Resolution</label>
+      <textarea id="resolution" name="resolution" rows="3" maxlength="2000" th:text="${form.resolution}"
+                placeholder="What was decided, and why?"></textarea>
+
+      <div class="action-row">
+        <button class="btn-grey" type="submit">Save progress</button>
+        <button class="submit" type="submit" name="close" value="1">Close case with this decision</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+</body>
+</html>
