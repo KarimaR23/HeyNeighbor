@@ -9,49 +9,66 @@
 <body>
 <th:block th:replace="~{Fragments :: header}"></th:block>
 
-<main class="wide">
-    <h1>Manage Users</h1>
+<main class="medium">
+    <p class="back-link"><a th:href="@{/admin/users}">&larr; Back to Manage Users</a></p>
+    <h1>Manage account</h1>
 
     <p class="alert ok" th:if="${message}" th:text="${message}">Saved.</p>
     <p class="alert error" th:if="${error}" th:text="${error}">Problem.</p>
 
-    <form class="filters" method="get" th:action="@{/admin/users}">
-        <input type="search" name="q" th:value="${q}" placeholder="Search name or email" aria-label="Search users">
-        <select name="role" aria-label="Role">
-            <option value="">All roles</option>
-            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}" th:selected="${r == role}"></option>
-        </select>
-        <select name="status" aria-label="Account status">
-            <option value="">All statuses</option>
-            <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}" th:selected="${s == status}"></option>
-        </select>
-        <button class="submit" type="submit">Search</button>
-        <a class="reset" th:href="@{/admin/users}">Clear</a>
-    </form>
+    <section class="panel">
+        <h2 th:text="${account.display_name}">Name</h2>
+        <p>
+            Current status:
+            <span class="pill" th:classappend="${'pill-' + account.account_status}" th:text="${account.account_status}">active</span>
+        </p>
 
-    <p class="count"><strong th:text="${#lists.size(rows)}">0</strong> user(s) found</p>
+        <dl class="kv">
+            <dt>Email</dt><dd th:text="${account.email}">email</dd>
+            <dt>Role</dt><dd th:text="${account.role_name}">role</dd>
+            <dt>Email verified</dt><dd th:text="${account.email_verified} ? 'Yes' : 'No'">Yes</dd>
+            <dt>Location</dt>
+            <dd><span th:text="${account.city}">City</span><span th:if="${account.state != null}">, <span th:text="${account.state}">GA</span></span>
+                <span th:text="${account.postal_code}">30303</span></dd>
+            <dt>Joined</dt><dd th:text="${#dates.format(account.created_at, 'MMM d, yyyy')}">Date</dd>
+            <dt>Last sign-in</dt>
+            <dd th:text="${account.last_login_at != null} ? ${#dates.format(account.last_login_at, 'MMM d, yyyy h:mm a')} : 'Never'">Never</dd>
+            <dt>Last status change</dt>
+            <dd th:if="${account.status_changed_at != null}">
+                <span th:text="${#dates.format(account.status_changed_at, 'MMM d, yyyy h:mm a')}">Date</span>
+                <span th:if="${account.status_changed_by != null}"> by <span th:text="${account.status_changed_by}">Admin</span></span>
+                <div class="muted small" th:if="${account.status_reason != null}" th:text="${account.status_reason}">Reason</div>
+            </dd>
+            <dd th:if="${account.status_changed_at == null}">No change recorded</dd>
+        </dl>
+    </section>
 
-    <div class="table-wrap" th:if="${!#lists.isEmpty(rows)}">
-        <table class="data">
-            <thead>
-            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Verified</th><th>City</th><th>Joined</th><th>Last sign-in</th><th></th></tr>
-            </thead>
-            <tbody>
-            <tr th:each="r : ${rows}">
-                <td th:text="${r.display_name}">Name</td>
-                <td th:text="${r.email}">email</td>
-                <td th:text="${r.role_name}">role</td>
-                <td><span class="pill" th:classappend="${'pill-' + r.account_status}" th:text="${r.account_status}">active</span></td>
-                <td th:text="${r.email_verified} ? 'Yes' : 'No'">Yes</td>
-                <td><span th:text="${r.city}">City</span><span th:if="${r.state != null}">, <span th:text="${r.state}">GA</span></span></td>
-                <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}">Date</td>
-                <td th:text="${r.last_login_at != null} ? ${#dates.format(r.last_login_at, 'MMM d, yyyy')} : 'Never'">Date</td>
-                <td><a class="btn-grey" th:href="@{/admin/users/{id}(id=${r.user_id})}">Manage</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <p class="empty" th:if="${#lists.isEmpty(rows)}">No users match your search.</p>
+    <section class="panel" th:if="${account.account_status == 'pending' or account.account_status == 'deactivated'}">
+        <h2>Activate this account</h2>
+        <p class="muted">The person will be able to sign in again.</p>
+        <form th:action="@{/admin/account-status/{id}(id=${account.user_id})}" method="post" class="stack">
+            <input type="hidden" name="action" value="activate">
+            <label for="activate-reason">Note (optional)</label>
+            <textarea id="activate-reason" name="reason" rows="2" maxlength="500"></textarea>
+            <button class="submit" type="submit">Activate account</button>
+        </form>
+    </section>
+
+    <section class="panel" th:if="${account.account_status == 'active' and !isSelf}">
+        <h2>Deactivate this account</h2>
+        <p class="muted">The person is signed out and cannot sign in until an administrator activates the account again.</p>
+        <form th:action="@{/admin/account-status/{id}(id=${account.user_id})}" method="post" class="stack">
+            <input type="hidden" name="action" value="deactivate">
+            <label for="deactivate-reason">Reason (required)</label>
+            <textarea id="deactivate-reason" name="reason" rows="3" maxlength="500" required></textarea>
+            <button class="submit danger" type="submit">Deactivate account</button>
+        </form>
+    </section>
+
+    <p class="muted" th:if="${account.account_status == 'active' and isSelf}">This is your own account, so it cannot be deactivated here.</p>
+    <p class="muted" th:if="${account.account_status == 'suspended' or account.account_status == 'banned'}">
+        This account is <strong th:text="${account.account_status}">suspended</strong>. Suspended and banned accounts are handled through moderation, so they cannot be activated or deactivated here.
+    </p>
 </main>
 
 </body>
