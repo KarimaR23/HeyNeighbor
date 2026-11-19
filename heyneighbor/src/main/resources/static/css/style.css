@@ -429,3 +429,36 @@ body:has(> .side-nav) > main { margin-left:calc(230px + 2rem); margin-right:2rem
     .side-nav a { white-space:nowrap; }
     body:has(> .side-nav) > main { margin-left:auto; margin-right:auto; }
 }
+
+
+
+/* ============================================================
+   Sprint V: sign-up width, account status, moderation review, sidebar
+   ============================================================ */
+main.medium { max-width:720px; margin:2rem auto 3rem; padding:0 1.5rem; }
+
+.back-link { margin:0 0 .5rem; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.kv { display:grid; grid-template-columns:9rem 1fr; gap:.4rem .9rem; margin:.75rem 0 0; }
+.kv dt { font-weight:600; color:var(--grey-dark); }
+.kv dd { margin:0; overflow-wrap:anywhere; }
+.plain-list { list-style:none; margin:.5rem 0 0; padding:0; display:flex; flex-direction:column; gap:.4rem; }
+.action-row { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.5rem; }
+.submit.danger { background:#991b1b; }
+.submit.danger:hover { background:#7f1d1d; }
+main.medium > .panel, main.wide > .panel { margin-bottom:1rem; }
+
+/* Sidebar: fades from red to blue, like the home page hero */
+.side-nav, .cu-side { background:linear-gradient(180deg, var(--blue), var(--blue-dark)); border-right:none; }
+.side-nav-role, .cu-side-role { color:var(--white); }
+.side-nav a, .cu-side a { color:var(--white); }
+.side-nav a:hover, .cu-side a:hover { background:rgba(255,255,255,.18); }
+.side-nav a.on, .cu-side a.on { background:var(--white); color:var(--red); font-weight:700; }
+.cu-side hr { border-top-color:rgba(255,255,255,.35); }
+/* the narrow pages keep their width beside the sidebar */
+body:has(> .side-nav) > main.medium { max-width:720px; }
+
+@media (max-width:860px) {
+    .side-nav, .cu-side { background:linear-gradient(90deg, var(--blue), var(--blue-dark)); }
+}
+@media (max-width:760px) { .detail-grid { grid-template-columns:1fr; } .kv { grid-template-columns:1fr; } }
