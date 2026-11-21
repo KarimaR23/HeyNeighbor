@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{Fragments :: head(${pageTitle})}">
-    <title>Support Requests</title>
+    <title>Community Support Requests</title>
 </head>
 
 <body>
@@ -11,117 +11,232 @@
 
 <main class="wide">
 
-    <h1 th:text="${pageTitle}">
-        Support Requests
-    </h1>
+    <div style="margin-bottom:24px;">
 
-    <p style="margin-bottom:20px;">
+        <h1 style="margin-bottom:6px;">
+            🤝 Community Support Requests
+        </h1>
 
-        <a th:href="@{/support/requests}">
-            Open Requests
+        <p style="color:#666;">
+            Helping neighbors solve exchange and community issues.
+        </p>
+
+    </div>
+
+    <div style="
+        display:flex;
+        gap:15px;
+        margin-bottom:25px;
+        flex-wrap:wrap;
+    ">
+
+        <a th:href="@{/support/requests}"
+           style="
+           background:#3b82f6;
+           color:white;
+           text-decoration:none;
+           padding:12px 20px;
+           border-radius:12px;
+           font-weight:bold;">
+            📬 Open Requests
         </a>
 
-        |
-
-        <a th:href="@{/support/in-progress}">
-            In Progress Requests
+        <a th:href="@{/support/in-progress}"
+           style="
+           background:#f59e0b;
+           color:white;
+           text-decoration:none;
+           padding:12px 20px;
+           border-radius:12px;
+           font-weight:bold;">
+            🛠️ In Progress
         </a>
 
-        |
-
-        <a th:href="@{/support/resolved}">
-            Resolved Requests
+        <a th:href="@{/support/resolved}"
+           style="
+           background:#22c55e;
+           color:white;
+           text-decoration:none;
+           padding:12px 20px;
+           border-radius:12px;
+           font-weight:bold;">
+            ✅ Resolved
         </a>
 
-    </p>
+    </div>
 
     <form method="get"
-          style="margin-bottom:20px;">
+          style="
+          background:#f8fafc;
+          padding:18px;
+          border-radius:12px;
+          margin-bottom:24px;
+          border:1px solid #e5e7eb;">
 
         <input type="text"
                name="search"
                th:value="${search}"
-               placeholder="Search subject or request type" />
+               placeholder="Search requests..."
+               style="
+               width:320px;
+               padding:10px;
+               border-radius:8px;
+               border:1px solid #d1d5db;">
 
-        <button type="submit">
-            Search
+        <button type="submit"
+                style="
+                background:#2563eb;
+                color:white;
+                border:none;
+                padding:10px 18px;
+                border-radius:8px;
+                cursor:pointer;">
+            🔍 Search
         </button>
 
     </form>
 
-    <p class="count">
+    <p style="margin-bottom:20px;">
         <strong th:text="${#lists.size(rows)}">0</strong>
         request(s) found
     </p>
 
-    <div class="table-wrap"
-         th:if="${!#lists.isEmpty(rows)}">
+    <div th:if="${!#lists.isEmpty(rows)}">
 
-        <table class="data">
+        <div th:each="r : ${rows}"
 
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Subject</th>
-                <th>Request Type</th>
-                <th>Status</th>
-                <th>Priority</th>
-                <th>Created</th>
-                <th>Update Status</th>
-            </tr>
-            </thead>
+             style="
+             background:white;
+             margin-bottom:24px;
+             padding:24px;
+             border-radius:18px;
+             box-shadow:0 6px 18px rgba(0,0,0,.08);
+             border-left:8px solid #3b82f6;">
 
-            <tbody>
+            <div style="margin-bottom:15px;">
 
-            <tr th:each="r : ${rows}">
+                <h3 style="margin:0;"
+                    th:text="${r.subject}">
+                    Request Subject
+                </h3>
 
-                <td th:text="${r.support_request_id}"></td>
+            </div>
 
-                <td th:text="${r.subject}"></td>
+            <div style="
+                 display:flex;
+                 gap:10px;
+                 flex-wrap:wrap;
+                 margin-bottom:15px;">
 
-                <td th:text="${r.request_type}"></td>
+                <span style="
+                      background:#dbeafe;
+                      padding:6px 12px;
+                      border-radius:999px;"
+                      th:text="'🏷️ ' + ${r.request_type}">
+                </span>
 
-                <td th:text="${r.status}"></td>
+                <span style="
+                      background:#fef3c7;
+                      padding:6px 12px;
+                      border-radius:999px;"
+                      th:text="'🔥 ' + ${r.priority}">
+                </span>
 
-                <td th:text="${r.priority}"></td>
+                <span style="
+                      background:#dcfce7;
+                      padding:6px 12px;
+                      border-radius:999px;"
+                      th:text="'📌 ' + ${r.status}">
+                </span>
 
-                <td th:text="${#dates.format(r.created_at, 'MMM d, yyyy')}"></td>
+            </div>
 
-                <td>
+            <p style="color:#666;">
+                Request #
+                <span th:text="${r.support_request_id}"></span>
+            </p>
 
-                    <form th:action="@{/support/update-status}"
-                          method="post">
+            <form th:action="@{/support/update-status}"
+                  method="post">
 
-                        <input type="hidden"
-                               name="supportRequestId"
-                               th:value="${r.support_request_id}" />
+                <input type="hidden"
+                       name="supportRequestId"
+                       th:value="${r.support_request_id}" />
 
-                        <select name="status">
-                            <option value="open">Open</option>
-                            <option value="in_progress">In Progress</option>
-                            <option value="resolved">Resolved</option>
-                        </select>
+                <label>
+                    <strong>💬 Coordinator Response</strong>
+                </label>
 
-                        <button type="submit">
-                            Update
-                        </button>
+                <textarea
+                        name="resolutionSummary"
+                        rows="4"
+                        placeholder="Enter your response or resolution..."
+                        style="
+                        width:100%;
+                        margin-top:8px;
+                        margin-bottom:15px;
+                        padding:12px;
+                        border-radius:10px;
+                        border:1px solid #d1d5db;
+                        resize:vertical;"></textarea>
 
-                    </form>
+                <div style="
+                     display:flex;
+                     gap:10px;
+                     flex-wrap:wrap;
+                     align-items:center;">
 
-                </td>
+                    <select
+                            name="status"
+                            style="
+                            padding:10px;
+                            border-radius:8px;
+                            border:1px solid #d1d5db;">
 
-            </tr>
+                        <option value="open">📬 Open</option>
 
-            </tbody>
+                        <option value="in_progress">
+                            🛠️ In Progress
+                        </option>
 
-        </table>
+                        <option value="resolved">
+                            ✅ Resolved
+                        </option>
+
+                    </select>
+
+                    <button type="submit"
+                            style="
+                            background:#2563eb;
+                            color:white;
+                            border:none;
+                            padding:12px 20px;
+                            border-radius:10px;
+                            font-weight:bold;
+                            cursor:pointer;">
+                        🚀 Update Request
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </div>
 
-    <p class="empty"
-       th:if="${#lists.isEmpty(rows)}">
-        No support requests found.
-    </p>
+    <div th:if="${#lists.isEmpty(rows)}"
+         style="
+         text-align:center;
+         padding:40px;
+         border-radius:12px;
+         background:#f8fafc;">
+
+        <h3>🎉 Nothing to review right now!</h3>
+
+        <p>No support requests found.</p>
+
+    </div>
 
 </main>
 

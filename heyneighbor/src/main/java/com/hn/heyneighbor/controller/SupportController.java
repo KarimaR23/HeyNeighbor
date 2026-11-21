@@ -82,11 +82,13 @@ public class SupportController {
     @PostMapping("/support/update-status")
     public String updateStatus(
             @RequestParam int supportRequestId,
-            @RequestParam String status) {
+            @RequestParam String status,
+            @RequestParam(required = false) String resolutionSummary) {
 
-        support.updateStatus(
+        support.updateRequest(
                 supportRequestId,
-                status
+                status,
+                resolutionSummary
         );
 
         return "redirect:/support/requests";

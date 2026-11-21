@@ -29,6 +29,7 @@ public class SupportRepository {
                         request_type,
                         status,
                         priority,
+                        resolution_summary,
                         created_at
                     FROM support_request
                     WHERE status = ?
@@ -47,6 +48,7 @@ public class SupportRepository {
                     request_type,
                     status,
                     priority,
+                    resolution_summary,
                     created_at
                 FROM support_request
                 WHERE status = ?
@@ -63,17 +65,22 @@ public class SupportRepository {
         );
     }
 
-    public void updateStatus(
+    public void updateRequest(
             int supportRequestId,
-            String status) {
+            String status,
+            String resolutionSummary) {
 
         jdbc.update(
                 """
                 UPDATE support_request
-                SET status = ?
+                SET
+                    status = ?,
+                    resolution_summary = ?,
+                    updated_at = NOW()
                 WHERE support_request_id = ?
                 """,
                 status,
+                resolutionSummary,
                 supportRequestId
         );
     }
