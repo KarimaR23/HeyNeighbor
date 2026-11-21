@@ -337,3 +337,128 @@ table.data tr:last-child td { border-bottom:none; }
 .org-fields { border:1px solid #d1d5db; border-radius:10px; padding:.75rem 1rem 1rem; display:none; }
 .org-fields legend { font-weight:600; padding:0 .4rem; }
 @media (max-width:700px) { .role-choice, .two-col { grid-template-columns:1fr; } }
+
+/* ============================================================
+   Community User pages (home + Browse Listings)
+   Same look as the public home page and the Figma Community User screens.
+   ============================================================ */
+body.cu { background:var(--white); }
+.cu-topbar { gap:1.25rem; }
+.cu-icons { display:flex; align-items:center; gap:.35rem; }
+.cu-icons a { width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:50%; color:var(--white); }
+.cu-icons a:hover { background:rgba(255,255,255,.15); }
+.cu-icons a.on { background:var(--white); color:var(--red); }
+.cu-icons svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.cu-me { display:flex; align-items:center; gap:.6rem; }
+.cu-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:var(--white); color:var(--red); font-weight:800; }
+.cu-me-name { font-weight:600; white-space:nowrap; }
+.cu-me .btn { padding:.4rem .9rem; background:transparent; color:var(--white); font:inherit; font-size:.9rem; cursor:pointer; }
+.categories a.on { background:var(--red); border-color:var(--red); color:var(--white); }
+
+.cu-shell { display:grid; grid-template-columns:220px minmax(0,1fr); max-width:1280px; margin:0 auto; min-height:70vh; }
+.cu-side { padding:1.25rem 1rem; border-right:1px solid var(--grey); }
+.cu-side-role { margin:0 0 .75rem .6rem; color:var(--blue); font-weight:800; font-size:.95rem; }
+.cu-side nav { display:flex; flex-direction:column; gap:.15rem; position:sticky; top:1rem; }
+.cu-side a { display:flex; align-items:center; gap:.6rem; padding:.55rem .7rem; border-radius:10px; color:var(--black); font-size:.95rem; }
+.cu-side a:hover { background:var(--grey-light); }
+.cu-side a.on { background:var(--grey-light); color:var(--red); font-weight:700; }
+.cu-side hr { border:none; border-top:1px solid var(--grey); margin:.6rem 0; }
+
+.cu-main { padding:1.5rem 1.75rem 3rem; min-width:0; }
+.cu-hero { max-width:none; margin:0 0 2rem; padding:2rem 2.25rem; }
+.cu-hero h1 { font-size:clamp(1.6rem,3vw,2.3rem); }
+.cu-hero .hero-logo { width:120px; height:120px; }
+
+.cu-section { margin-bottom:2rem; }
+.cu-section-head { display:flex; align-items:baseline; justify-content:space-between; gap:1rem; margin-bottom:.8rem; }
+.cu-section-head h2 { margin:0; font-size:1.25rem; }
+.cu-section-head > a { color:var(--red); font-weight:600; font-size:.92rem; }
+.cu-section-head > a:hover { text-decoration:underline; }
+
+/* a row of cards that scrolls sideways, like the Figma rows */
+.cu-row { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(200px,220px); gap:1.1rem;
+    overflow-x:auto; padding-bottom:.6rem; scroll-snap-type:x mandatory; }
+.cu-row .card { scroll-snap-align:start; }
+.cu-wants { margin:.15rem 0 0; font-size:.82rem; color:var(--grey-dark); }
+.cu-wants span { color:var(--black); font-weight:600; }
+.cu-empty { margin:0; padding:1.5rem; text-align:center; color:var(--grey-dark); background:var(--grey-light); border-radius:14px; }
+
+/* Browse Listings */
+.cu-browse-head { align-items:flex-end; flex-wrap:wrap; margin-bottom:1.25rem; }
+.cu-browse-head h1 { margin:0 0 .25rem; font-size:1.7rem; }
+.cu-filters { display:flex; gap:.5rem; flex-wrap:wrap; }
+.cu-filters select { padding:.55rem .8rem; border:1px solid #cbd5e1; border-radius:999px; background:var(--white); font:inherit; font-size:.92rem; }
+.cu-apply { padding:.55rem 1.2rem; border:none; border-radius:999px; background:var(--red); color:var(--white); font:inherit; font-weight:600; cursor:pointer; }
+.cu-apply:hover { background:var(--blue-dark); }
+.cu-clear { align-self:center; color:var(--red); font-weight:600; font-size:.92rem; }
+.cu-note { margin:0 0 1rem; padding:.7rem 1rem; border-radius:10px; background:#fef3c7; color:#92400e; font-size:.92rem; }
+
+@media (max-width: 860px) {
+    .cu-shell { grid-template-columns:1fr; }
+    .cu-side { border-right:none; border-bottom:1px solid var(--grey); }
+    .cu-side nav { flex-direction:row; flex-wrap:wrap; position:static; }
+    .cu-side hr, .cu-side-role { display:none; }
+    .cu-me-name { display:none; }
+    .cu-main { padding:1.25rem 1rem 2.5rem; }
+}
+
+/* who posted a listing: profile picture (or initial) and name */
+.cu-poster { display:flex; align-items:center; gap:.5rem; margin-top:.5rem; }
+.cu-poster-pic { flex:none; width:26px; height:26px; border-radius:50%; object-fit:cover;
+    display:flex; align-items:center; justify-content:center; color:var(--white); font-size:.75rem; font-weight:700; }
+.cu-poster-name { font-size:.85rem; font-weight:600; color:var(--black); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+/* ============================================================
+   Role sidebar (Admin, Community Partner, Moderator, Support Coordinator)
+   Same left menu as the Community User pages and the Figma screens.
+   ============================================================ */
+.side-nav { position:fixed; top:64px; bottom:0; left:0; width:230px; z-index:5; overflow-y:auto;
+    display:flex; flex-direction:column; gap:.15rem; padding:1.25rem 1rem; background:var(--white); border-right:1px solid var(--grey); }
+.side-nav-role { margin:0 0 .75rem .6rem; color:var(--blue); font-weight:800; font-size:.95rem; }
+.side-nav a { display:flex; align-items:center; gap:.6rem; padding:.55rem .7rem; border-radius:10px; color:var(--black); font-size:.95rem; }
+.side-nav a:hover { background:var(--grey-light); }
+.side-nav a.on { background:var(--grey-light); color:var(--red); font-weight:700; }
+/* page content sits to the right of the sidebar */
+body:has(> .side-nav) > main { margin-left:calc(230px + 2rem); margin-right:2rem; max-width:1100px; }
+
+@media (max-width: 860px) {
+    .side-nav { position:static; width:auto; flex-direction:row; overflow-x:auto; padding:.6rem 1rem;
+        border-right:none; border-bottom:1px solid var(--grey); }
+    .side-nav-role { display:none; }
+    .side-nav a { white-space:nowrap; }
+    body:has(> .side-nav) > main { margin-left:auto; margin-right:auto; }
+}
+
+
+
+/* ============================================================
+   Sprint V: sign-up width, account status, moderation review, sidebar
+   ============================================================ */
+main.medium { max-width:720px; margin:2rem auto 3rem; padding:0 1.5rem; }
+
+.back-link { margin:0 0 .5rem; }
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem; }
+.kv { display:grid; grid-template-columns:9rem 1fr; gap:.4rem .9rem; margin:.75rem 0 0; }
+.kv dt { font-weight:600; color:var(--grey-dark); }
+.kv dd { margin:0; overflow-wrap:anywhere; }
+.plain-list { list-style:none; margin:.5rem 0 0; padding:0; display:flex; flex-direction:column; gap:.4rem; }
+.action-row { display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.5rem; }
+.submit.danger { background:#991b1b; }
+.submit.danger:hover { background:#7f1d1d; }
+main.medium > .panel, main.wide > .panel { margin-bottom:1rem; }
+
+/* Sidebar: fades from red to blue, like the home page hero */
+.side-nav, .cu-side { background:linear-gradient(180deg, var(--blue), var(--blue-dark)); border-right:none; }
+.side-nav-role, .cu-side-role { color:var(--white); }
+.side-nav a, .cu-side a { color:var(--white); }
+.side-nav a:hover, .cu-side a:hover { background:rgba(255,255,255,.18); }
+.side-nav a.on, .cu-side a.on { background:var(--white); color:var(--red); font-weight:700; }
+.cu-side hr { border-top-color:rgba(255,255,255,.35); }
+/* the narrow pages keep their width beside the sidebar */
+body:has(> .side-nav) > main.medium { max-width:720px; }
+
+@media (max-width:860px) {
+    .side-nav, .cu-side { background:linear-gradient(90deg, var(--blue), var(--blue-dark)); }
+}
+@media (max-width:760px) { .detail-grid { grid-template-columns:1fr; } .kv { grid-template-columns:1fr; } }
