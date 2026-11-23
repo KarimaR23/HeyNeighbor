@@ -22,7 +22,7 @@ public class CommunityListingRepository {
 
     /** Columns every listing card needs. */
     private static final String CARD_COLUMNS = """
-            SELECT l.listing_id, l.title, l.description, l.listing_type, l.offering_kind, l.trade_wanted,
+            SELECT l.listing_id, l.owner_user_id, l.title, l.description, l.listing_type, l.offering_kind, l.trade_wanted,
                    l.city, l.postal_code, l.quantity_available, l.availability_notes,
                    l.listing_images, c.name AS category_name,
                    COALESCE(o.org_name, owner.display_name) AS posted_by,
@@ -48,6 +48,53 @@ public class CommunityListingRepository {
 
     public List<Map<String, Object>> categories() {
         return jdbc.queryForList("SELECT category_id, name FROM category WHERE is_active = true ORDER BY display_order, name");
+    }
+
+    /** Pickup, drop-off and both: the fulfillment choices a new listing can use. */
+    public List<Map<String, Object>> fulfillmentMethods() {
+        return jdbc.queryForList("SELECT method_id, method_name, description FROM fulfillment_method WHERE is_active = true ORDER BY method_id");
+    }
+
+    /** City, ZIP and coordinates saved on the user's profile. A listing is placed at its owner's location. */
+    public Map<String, Object> profileLocation(long userId) {
+        return jdbc.queryForMap("SELECT city, postal_code, latitude, longitude FROM user_account WHERE user_id = ?", userId);
+    }
+
+    /** True while a moderator restriction stops this user from creating listings (Warn or Temporarily Restrict Users). */
+    public boolean isBlockedFromListing(long userId) {
+        Boolean blocked = jdbc.queryForObject("""
+                SELECT EXISTS (
+                    SELECT 1 FROM user_restriction
+                    WHERE user_id = ? AND restriction_type = 'no_listings'
+                      AND lifted_at IS NULL AND starts_at <= now() AND ends_at > now())
+                """, Boolean.class, userId);
+        return Boolean.TRUE.equals(blocked);
+    }
+
+    /** What a Community User enters on the Post a Listing form, already checked by ListingService. */
+    public record NewListing(long ownerId, int categoryId, int fulfillmentMethodId, String title, String description,
+                             String listingType, String offeringKind, String tradeWanted, Integer quantity,
+                             String quantityUnit, String availabilityNotes, String pickupDropoffNotes,
+                             String imagesJson, String city, String postalCode, Object latitude, Object longitude) {
+    }
+
+    /** Saves a new active listing, published now, and returns its id. */
+    public long create(NewListing n) {
+        Long id = jdbc.queryForObject("""
+                INSERT INTO listing
+                    (owner_user_id, organization_id, category_id, listing_status, fulfillment_method_id,
+                     title, description, listing_type, offering_kind, trade_wanted,
+                     quantity_available, quantity_unit, availability_notes, pickup_dropoff_notes, listing_images,
+                     city, postal_code, latitude, longitude,
+                     created_at, updated_at, published_at)
+                VALUES (?, NULL, ?, 'active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now(), now(), now())
+                RETURNING listing_id
+                """, Long.class,
+                n.ownerId(), n.categoryId(), n.fulfillmentMethodId(), n.title(), n.description(),
+                n.listingType(), n.offeringKind(), n.tradeWanted(), n.quantity(), n.quantityUnit(),
+                n.availabilityNotes(), n.pickupDropoffNotes(), n.imagesJson(),
+                n.city(), n.postalCode(), n.latitude(), n.longitude());
+        return id == null ? 0 : id;
     }
 
     public boolean hasLocation(long userId) {
