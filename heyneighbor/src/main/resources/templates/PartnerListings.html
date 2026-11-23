@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{Fragments :: head(${pageTitle})}">
+  <title>Our Listings</title>
+</head>
+
+<body>
+
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="container">
+
+  <div class="section-head">
+    <div>
+      <h1>Our Listings</h1>
+      <p th:if="${organization != null}"
+         th:text="${organization.org_name}">
+        Organization Name
+      </p>
+    </div>
+
+    <a class="btn"
+       th:href="@{/partner/listings/new}"
+       style="background-color: #2445a5; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; display: inline-block;">
+      + Create Listing
+    </a>
+  </div>
+
+  <div th:if="${success}" class="alert alert-success"
+       th:text="${success}">
+  </div>
+
+  <div th:if="${organization == null}">
+    <p>No approved organization was found for your account.</p>
+  </div>
+
+  <div th:if="${organization != null and #lists.isEmpty(listings)}">
+    <p>Your organization hasn't posted any listings yet.</p>
+  </div>
+
+  <div th:if="${organization != null and not #lists.isEmpty(listings)}">
+
+    <style>
+      .listing-table th,
+      .listing-table td {
+          padding: 14px 20px;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+      }
+
+      .listing-table th {
+          font-weight: bold;
+      }
+    </style>
+
+    <table class="listing-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+      <thead>
+      <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Type</th>
+        <th>Offering</th>
+        <th>Quantity</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr th:each="listing : ${listings}">
+        <td th:text="${listing.title}">Listing title</td>
+        <td th:text="${listing.category_name}">Category</td>
+        <td th:text="${listing.listing_type}">Gift</td>
+        <td th:text="${listing.offering_kind}">Good</td>
+        <td th:text="${listing.quantity_available != null ? listing.quantity_available : '-'}">-</td>
+        <td th:text="${listing.listing_status}">Active</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Hey Neighbor.</p>
+</footer>
+
+</body>
+</html>

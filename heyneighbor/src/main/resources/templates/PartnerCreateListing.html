@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{Fragments :: head(${pageTitle})}">
+  <title>Create Organization Listing</title>
+</head>
+
+<body>
+
+<th:block th:replace="~{Fragments :: header}"></th:block>
+
+<main class="container">
+
+  <h1>Create Organization Listing</h1>
+
+  <p>Share resources and services with your community.</p>
+
+  <div th:if="${error}"
+       th:text="${error}"
+       style="background-color: #ffe0e0; color: #a00000; padding: 15px; margin: 15px 0; border: 2px solid #a00000; border-radius: 8px;">
+  </div>
+
+  <div th:if="${success}" class="alert alert-success"
+       th:text="${success}">
+  </div>
+
+  <div th:if="${organization == null}">
+    <p>
+      Your organization must be approved before
+      you can publish listings.
+    </p>
+  </div>
+
+  <div th:if="${organization != null}">
+
+    <h2 th:text="${organization.org_name}">
+      Organization Name
+    </h2>
+
+    <style>
+      /* Add space between the form fields */
+      .partner-listing-form {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+      }
+
+      /* Keep labels and dropdowns comfortably spaced */
+      .partner-listing-form select {
+          margin: 6px 0;
+      }
+    </style>
+
+    <form class="partner-listing-form" method="post"
+          th:action="@{/partner/listings/new}"
+          enctype="multipart/form-data">
+
+      <div>
+        <label for="title">Listing Title</label>
+        <input type="text" id="title" name="title"
+               maxlength="150" required>
+      </div>
+
+      <div>
+        <label for="description">Description</label>
+        <textarea id="description" name="description"
+                  rows="5" required></textarea>
+      </div>
+
+      <div>
+        <label for="categoryId">Category</label>
+        <select id="categoryId" name="categoryId" required>
+          <option value="">Select a category</option>
+          <option th:each="c : ${categories}"
+                  th:value="${c.category_id}"
+                  th:text="${c.name}">
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="listingType">Listing Type</label>
+        <select id="listingType" name="listingType" required>
+          <option value="gift">Gift (Free)</option>
+          <option value="trade">Trade</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="offeringKind">What are you offering?</label>
+        <select id="offeringKind" name="offeringKind" required>
+          <option value="good">Item</option>
+          <option value="service">Service</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="tradeWanted">
+          What would you like in return?
+        </label>
+        <input type="text" id="tradeWanted"
+               name="tradeWanted"
+               placeholder="Only required for trades">
+      </div>
+
+      <div>
+        <label for="fulfillmentMethodId">
+          Fulfillment Method
+        </label>
+        <select id="fulfillmentMethodId"
+                name="fulfillmentMethodId" required>
+          <option value="">Select a method</option>
+          <option th:each="method : ${fulfillmentMethods}"
+                  th:value="${method.method_id}"
+                  th:text="${method.method_name}">
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label for="quantityAvailable">
+          Quantity Available
+        </label>
+        <input type="number" id="quantityAvailable"
+               name="quantityAvailable" min="1">
+      </div>
+
+      <div>
+        <label for="pickupDropoffNotes">
+          Pickup / Drop-off Details
+        </label>
+        <textarea id="pickupDropoffNotes"
+                  name="pickupDropoffNotes"
+                  rows="3"></textarea>
+      </div>
+
+
+      <div>
+        <label for="listingImage">Listing Picture (Optional)</label>
+        <input type="file"
+               id="listingImage"
+               name="listingImage"
+               accept="image/jpeg,image/png,image/webp">
+        <small>JPG, PNG, or WebP. Maximum 5 MB.</small>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+
+        <button type="submit" class="btn"
+                style="background-color: #2445a5; color: white; padding: 12px 20px; border-radius: 8px; cursor: pointer;">
+          Publish Listing
+        </button>
+
+        <a th:href="@{/partner/listings}"
+           style="text-decoration: none; color: #2445a5;">
+          Cancel
+        </a>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</main>
+
+<footer>
+  <p>Hey Neighbor.</p>
+</footer>
+
+</body>
+</html>

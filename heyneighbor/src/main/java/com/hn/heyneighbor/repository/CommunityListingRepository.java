@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Repository
 public class CommunityListingRepository {
@@ -50,8 +51,100 @@ public class CommunityListingRepository {
         return jdbc.queryForList("SELECT category_id, name FROM category WHERE is_active = true ORDER BY display_order, name");
     }
 
+
+    /** Available pickup and delivery options for listing forms. */
+    public List<Map<String, Object>> fulfillmentMethods() {
+        return jdbc.queryForList("""
+                SELECT method_id, method_name
+                FROM fulfillment_method
+                WHERE is_active = true
+                ORDER BY method_id
+                """);
+    }
+
+
+    /** Create a listing using the signed-in user's saved location. */
+    public int createListing(long userId, int categoryId,
+                             int fulfillmentMethodId, String title,
+                             String description, String listingType,
+                             String offeringKind, String tradeWanted,
+                             Integer quantityAvailable,
+                             String pickupDropoffNotes) {
+
+        Integer listingId = jdbc.queryForObject("""
+                INSERT INTO listing (
+                    owner_user_id,
+                    category_id,
+                    fulfillment_method_id,
+                    title,
+                    description,
+                    listing_type,
+                    offering_kind,
+                    trade_wanted,
+                    quantity_available,
+                    pickup_dropoff_notes,
+                    city,
+                    postal_code,
+                    latitude,
+                    longitude,
+                    listing_status,
+                    published_at
+                )
+                SELECT
+                    u.user_id,
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                    u.city,
+                    u.postal_code,
+                    u.latitude,
+                    u.longitude,
+                    'active',
+                    CURRENT_TIMESTAMP
+                FROM user_account u
+                WHERE u.user_id = ?
+                  AND u.account_status = 'active'
+                  AND u.postal_code IS NOT NULL
+                  AND u.latitude IS NOT NULL
+                  AND u.longitude IS NOT NULL
+                RETURNING listing_id
+                """,
+                Integer.class,
+                categoryId,
+                fulfillmentMethodId,
+                title,
+                description,
+                listingType,
+                offeringKind,
+                tradeWanted,
+                quantityAvailable,
+                pickupDropoffNotes,
+                userId
+        );
+
+        return Objects.requireNonNull(listingId);
+    }
+
+    /** Attach an uploaded picture to a listing owned by this user. */
+    public int updateListingImage(long userId, int listingId, String filename) {
+        return jdbc.update("""
+            UPDATE listing
+            SET listing_images = ?,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE listing_id = ?
+              AND owner_user_id = ?
+              AND organization_id IS NULL
+            """, filename, listingId, userId);
+    }
+
+
     public boolean hasLocation(long userId) {
-        Boolean found = jdbc.queryForObject("SELECT latitude IS NOT NULL AND longitude IS NOT NULL FROM user_account WHERE user_id = ?", Boolean.class, userId);
+        Boolean found = jdbc.queryForObject("""
+        SELECT postal_code IS NOT NULL
+           AND latitude IS NOT NULL
+           AND longitude IS NOT NULL
+        FROM user_account
+        WHERE user_id = ?
+        """, Boolean.class, userId);
+
         return Boolean.TRUE.equals(found);
     }
 

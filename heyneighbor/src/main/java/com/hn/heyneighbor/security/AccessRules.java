@@ -16,6 +16,8 @@ public final class AccessRules {
 
     private static final List<Rule> RULES = List.of(
             // more specific paths first: the first matching rule wins
+            new Rule("/community/listings/new", "listing.create"),
+            new Rule("/partner/listings/new", "listing.create"),
             new Rule("/admin/categories", "category.manage"),
             new Rule("/admin/reports", "report.generate"),
             new Rule("/admin/account-status", "account.change_status"),
@@ -41,9 +43,9 @@ public final class AccessRules {
     }
 
     public static boolean isCommon(String path) {
-        return COMMON.contains(path);
+        return COMMON.contains(path)
+                || path.startsWith("/listing-uploads/");
     }
-
     /** Paths with path parameters, encoded characters or doubled slashes are never allowed. */
     public static boolean isSuspicious(String path) {
         return path.contains(";") || path.contains("%") || path.contains("//") || path.contains("..");
