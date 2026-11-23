@@ -14,7 +14,7 @@
         <h1>Welcome back, <span th:text="${currentUser.displayName}">Neighbor</span></h1>
         <p>See what your neighbors are giving away and trading near you.</p>
         <div class="cta">
-          <a class="btn primary big" href="#" onclick="return false;">Post a listing</a>
+          <a class="btn primary big" th:href="@{/community/listings/new}">Post a listing</a>
           <a class="btn big" th:href="@{/community/listings}">Browse your neighborhood</a>
         </div>
       </div>

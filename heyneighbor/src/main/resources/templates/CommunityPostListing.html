@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{Fragments :: head(${pageTitle})}"><title>Post a Listing</title></head>
+<body class="cu">
+<th:block th:replace="~{CommunityFragments :: top}"></th:block>
+
+<div class="cu-shell">
+  <aside th:replace="~{CommunityFragments :: side}"></aside>
+
+  <main class="cu-main">
+    <div class="pl-wrap">
+      <h1>Post a listing</h1>
+      <p class="pl-lead">Give something away or offer a trade to neighbors near you.</p>
+
+      <div class="pl-errors" th:if="${errors != null and !#lists.isEmpty(errors)}" role="alert">
+        <strong>Please fix the following:</strong>
+        <ul><li th:each="e : ${errors}" th:text="${e}">Enter a title.</li></ul>
+      </div>
+
+      <form class="pl-form" method="post" th:action="@{/community/listings/new}" enctype="multipart/form-data">
+
+        <!-- 1. What and how -->
+        <section class="pl-card">
+          <h2>What are you sharing?</h2>
+          <div class="pl-choices">
+            <label class="pl-choice">
+              <input type="radio" name="offeringKind" value="good" th:checked="${form.offeringKind == 'good'}">
+              <span class="pl-choice-box"><span class="pl-choice-icon">📦</span>
+                <strong>An item</strong><small>Food, clothes, furniture, supplies</small></span>
+            </label>
+            <label class="pl-choice">
+              <input type="radio" name="offeringKind" value="service" th:checked="${form.offeringKind == 'service'}">
+              <span class="pl-choice-box"><span class="pl-choice-icon">🛠️</span>
+                <strong>A service</strong><small>Tutoring, repairs, rides, help</small></span>
+            </label>
+          </div>
+
+          <h3 class="pl-sub">Free or trade?</h3>
+          <div class="pl-choices">
+            <label class="pl-choice">
+              <input type="radio" name="listingType" value="gift" th:checked="${form.listingType == 'gift'}">
+              <span class="pl-choice-box"><span class="pl-choice-icon">🎁</span>
+                <strong>Free</strong><small>Give it to a neighbor at no cost</small></span>
+            </label>
+            <label class="pl-choice">
+              <input type="radio" name="listingType" value="trade" th:checked="${form.listingType == 'trade'}">
+              <span class="pl-choice-box"><span class="pl-choice-icon">🔁</span>
+                <strong>Trade</strong><small>Swap it for something you need</small></span>
+            </label>
+          </div>
+        </section>
+
+        <!-- 2. Details -->
+        <section class="pl-card">
+          <h2>Details</h2>
+
+          <label class="pl-field">
+            <span>Title <em>*</em></span>
+            <input type="text" name="title" maxlength="150" th:value="${form.title}" placeholder="e.g. Fresh garden tomatoes">
+          </label>
+
+          <label class="pl-field">
+            <span>Description <em>*</em></span>
+            <textarea name="description" rows="5" maxlength="2000" th:text="${form.description}"
+                      placeholder="What is it, what condition is it in, and anything a neighbor should know."></textarea>
+          </label>
+
+          <label class="pl-field">
+            <span>Category <em>*</em></span>
+            <select name="categoryId">
+              <option value="">Choose a category</option>
+              <option th:each="c : ${categories}" th:value="${c.category_id}"
+                      th:text="${c.emoji + '  ' + c.name}"
+                      th:selected="${form.categoryId == #strings.toString(c.category_id)}">Food</option>
+            </select>
+          </label>
+
+          <label class="pl-field pl-trade-only">
+            <span>What would you like in return? <em>*</em></span>
+            <input type="text" name="tradeWanted" maxlength="500" th:value="${form.tradeWanted}"
+                   placeholder="e.g. A box of canned food, or help painting a room">
+          </label>
+
+          <div class="pl-row">
+            <label class="pl-field">
+              <span>Quantity <small>(optional)</small></span>
+              <input type="number" name="quantity" min="1" max="999" step="1" th:value="${form.quantity}" placeholder="e.g. 3">
+            </label>
+            <label class="pl-field">
+              <span>Unit <small>(optional)</small></span>
+              <input type="text" name="quantityUnit" maxlength="30" th:value="${form.quantityUnit}" placeholder="e.g. bags, hours">
+            </label>
+          </div>
+        </section>
+
+        <!-- 3. Photos -->
+        <section class="pl-card">
+          <h2>Photos <small>(optional)</small></h2>
+          <label class="pl-drop">
+            <input type="file" name="photos" multiple accept="image/jpeg,image/png,image/webp">
+            <span class="pl-drop-icon">📷</span>
+            <span><strong>Choose photos</strong> — up to <span th:text="${maxPhotos}">4</span>, JPG, PNG or WebP, 5 MB each</span>
+          </label>
+          <div class="pl-previews" aria-live="polite"></div>
+        </section>
+
+        <!-- 4. Getting it to a neighbor -->
+        <section class="pl-card">
+          <h2>Getting it to a neighbor</h2>
+          <div class="pl-choices pl-choices-3">
+            <label class="pl-choice" th:each="m : ${methods}">
+              <input type="radio" name="fulfillmentMethodId" th:value="${m.method_id}"
+                     th:checked="${form.fulfillmentMethodId == #strings.toString(m.method_id)}">
+              <span class="pl-choice-box">
+                <span class="pl-choice-icon"
+                      th:text="${m.method_name == 'pickup'} ? '🚶' : (${m.method_name == 'drop-off'} ? '🚗' : '🤝')">🚶</span>
+                <strong th:text="${m.method_name == 'drop-off'} ? 'Drop-off' : (${m.method_name == 'both'} ? 'Either' : 'Pickup')">Pickup</strong>
+                <small th:text="${m.description}">The receiver picks it up</small>
+              </span>
+            </label>
+          </div>
+
+          <label class="pl-field">
+            <span>Pickup or drop-off details <small>(optional)</small></span>
+            <input type="text" name="pickupDropoffNotes" maxlength="500" th:value="${form.pickupDropoffNotes}"
+                   placeholder="e.g. Porch pickup, or I can drop off within 3 miles">
+          </label>
+          <label class="pl-field">
+            <span>When is it available? <small>(optional)</small></span>
+            <input type="text" name="availabilityNotes" maxlength="500" th:value="${form.availabilityNotes}"
+                   placeholder="e.g. Weekday evenings after 6pm">
+          </label>
+
+          <p class="pl-location">
+            📍 Shown to neighbors near
+            <strong th:if="${location.postal_code != null}">
+              <span th:text="${location.city}">Atlanta</span> <span th:text="${location.postal_code}">30303</span></strong>
+            <strong th:if="${location.postal_code == null}">your profile location (not set yet)</strong>
+            <span class="pl-muted">· from your profile</span>
+          </p>
+        </section>
+
+        <div class="pl-actions">
+          <a class="pl-cancel" th:href="@{/community/listings}">Cancel</a>
+          <button class="cu-apply pl-submit" type="submit">Publish listing</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<footer><p>Hey Neighbor.</p></footer>
+
+<script>
+  // small photo previews before posting (the server still checks every file)
+  (function () {
+    var input = document.querySelector('.pl-drop input[type=file]');
+    var box = document.querySelector('.pl-previews');
+    if (!input || !box || !window.URL) return;
+    input.addEventListener('change', function () {
+      box.textContent = '';
+      Array.prototype.slice.call(input.files, 0, 4).forEach(function (file) {
+        var img = document.createElement('img');
+        img.alt = '';
+        img.src = URL.createObjectURL(file);
+        box.appendChild(img);
+      });
+    });
+  })();
+</script>
+</body>
+</html>

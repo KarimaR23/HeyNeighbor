@@ -27,7 +27,7 @@
     </form>
 
     <nav class="cu-icons" aria-label="Quick actions">
-      <a th:href="@{/community/listings/new}" title="Post a listing" aria-label="Post a listing">
+      <a href="#" onclick="return false;" title="Post a listing" aria-label="Post a listing">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
       <a th:href="@{/community}" title="Home" aria-label="Home" th:classappend="${active == 'home'} ? 'on'">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
@@ -72,15 +72,12 @@
 </aside>
 
 <!-- One listing card, same design as "Near you right now" on the public home page -->
-
 <article class="card" th:fragment="card(item)">
   <div class="thumb" th:style="'background:' + ${item.color}">
     <span class="emoji" th:text="${item.emoji}">🥕</span>
-    <span class="badge"
-          th:classappend="${item.listing_type == 'trade'} ? 'trade'"
+    <span class="badge" th:classappend="${item.listing_type == 'trade'} ? 'trade'"
           th:text="${item.listing_type == 'trade'} ? 'Trade' : 'Free'">Free</span>
   </div>
-
   <div class="info">
     <h3 th:text="${item.title}">Listing title</h3>
     <p class="meta">

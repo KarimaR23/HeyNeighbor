@@ -462,3 +462,66 @@ body:has(> .side-nav) > main.medium { max-width:720px; }
     .side-nav, .cu-side { background:linear-gradient(90deg, var(--blue), var(--blue-dark)); }
 }
 @media (max-width:760px) { .detail-grid { grid-template-columns:1fr; } .kv { grid-template-columns:1fr; } }
+/* ============================================================
+   Community User: Post a Listing (Sprint V)
+   ============================================================ */
+.cu-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.cu-success { margin:0 0 1rem; padding:.75rem 1rem; border-radius:10px; background:#dcfce7; color:#166534; font-weight:600; }
+
+.pl-wrap { max-width:760px; }
+.pl-wrap h1 { margin:0 0 .25rem; font-size:1.8rem; }
+.pl-lead { margin:0 0 1.25rem; color:var(--grey-dark); }
+.pl-errors { margin:0 0 1.25rem; padding:.9rem 1.1rem; border-radius:12px; background:#fef2f2; border:1px solid #fecaca; color:#991b1b; }
+.pl-errors ul { margin:.4rem 0 0; padding-left:1.2rem; }
+.pl-form { display:flex; flex-direction:column; gap:1.1rem; }
+.pl-card { padding:1.25rem 1.4rem; border:1px solid var(--grey); border-radius:16px; background:var(--white); }
+.pl-card h2 { margin:0 0 .9rem; font-size:1.1rem; }
+.pl-card h2 small, .pl-field small { color:var(--grey-dark); font-weight:400; font-size:.85rem; }
+.pl-sub { margin:1.1rem 0 .6rem; font-size:.95rem; }
+
+/* big tap-friendly choices */
+.pl-choices { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.pl-choices-3 { grid-template-columns:repeat(3,1fr); margin-bottom:1rem; }
+.pl-choice { position:relative; cursor:pointer; }
+.pl-choice input { position:absolute; opacity:0; pointer-events:none; }
+.pl-choice-box { display:flex; flex-direction:column; gap:.15rem; height:100%; padding:.85rem 1rem; border:2px solid var(--grey);
+    border-radius:12px; background:var(--white); transition:border-color .15s, background .15s; }
+.pl-choice-box small { color:var(--grey-dark); font-size:.82rem; line-height:1.35; }
+.pl-choice-icon { font-size:1.5rem; }
+.pl-choice:hover .pl-choice-box { border-color:#93a3d8; }
+.pl-choice input:checked + .pl-choice-box { border-color:var(--red); background:#eef2ff; }
+.pl-choice input:focus-visible + .pl-choice-box { outline:3px solid #93a3d8; outline-offset:2px; }
+
+.pl-field { display:flex; flex-direction:column; gap:.35rem; margin-bottom:.95rem; font-weight:600; font-size:.92rem; }
+.pl-field em { color:var(--blue); font-style:normal; }
+.pl-field input, .pl-field select, .pl-field textarea { padding:.65rem .85rem; border:1px solid #cbd5e1; border-radius:10px;
+    font:inherit; font-weight:400; font-size:.95rem; background:var(--white); color:var(--black); }
+.pl-field textarea { resize:vertical; min-height:110px; }
+.pl-field input:focus, .pl-field select:focus, .pl-field textarea:focus { outline:2px solid var(--red); outline-offset:1px; border-color:transparent; }
+.pl-row { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.pl-row .pl-field { margin-bottom:0; }
+
+/* the "in return" box only shows for trades */
+.pl-trade-only { display:none; }
+.pl-form:has(input[name=listingType][value=trade]:checked) .pl-trade-only { display:flex; }
+
+.pl-drop { display:flex; align-items:center; gap:.8rem; padding:1.1rem 1.2rem; border:2px dashed #cbd5e1; border-radius:12px;
+    background:var(--grey-light); cursor:pointer; font-size:.92rem; color:var(--grey-dark); }
+.pl-drop:hover { border-color:var(--red); }
+.pl-drop strong { color:var(--red); }
+.pl-drop input { max-width:0; max-height:0; opacity:0; position:absolute; }
+.pl-drop-icon { font-size:1.6rem; }
+.pl-previews { display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.75rem; }
+.pl-previews:empty { display:none; }
+.pl-previews img { width:84px; height:84px; object-fit:cover; border-radius:10px; border:1px solid var(--grey); }
+
+.pl-location { margin:.2rem 0 0; font-size:.92rem; }
+.pl-muted { color:var(--grey-dark); }
+.pl-actions { display:flex; justify-content:flex-end; align-items:center; gap:1rem; margin-bottom:1rem; }
+.pl-cancel { color:var(--grey-dark); font-weight:600; }
+.pl-cancel:hover { color:var(--black); }
+.pl-submit { padding:.75rem 1.6rem; font-size:1rem; }
+
+@media (max-width: 640px) {
+    .pl-choices, .pl-choices-3, .pl-row { grid-template-columns:1fr; }
+}
