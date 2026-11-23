@@ -52,10 +52,20 @@ public class CommunityListingController {
     /** Post a Listing form (Sprint V: Community User creates a new listing for an item, service, or trade). */
     @GetMapping("/community/listings/new")
     public String newListing(HttpServletRequest request, Model model) {
-        Map<String, String> form = new HashMap<>();
+        Map<String, String> form = emptyForm();
         form.put("offeringKind", "good");
         form.put("listingType", "gift");
         return renderForm(request, model, form, null);
+    }
+
+    /** Every field the page reads, blank. Thymeleaf fails on a missing key, so all of them must be present. */
+    private static Map<String, String> emptyForm() {
+        Map<String, String> form = new HashMap<>();
+        for (String key : List.of("offeringKind", "listingType", "title", "description", "categoryId", "tradeWanted",
+                "quantity", "quantityUnit", "fulfillmentMethodId", "availabilityNotes", "pickupDropoffNotes")) {
+            form.put(key, "");
+        }
+        return form;
     }
 
     @PostMapping("/community/listings/new")
@@ -85,7 +95,7 @@ public class CommunityListingController {
         }
 
         // show the form again with what they typed; photos must be chosen again (browsers never refill file boxes)
-        Map<String, String> form = new HashMap<>();
+        Map<String, String> form = emptyForm();
         put(form, "offeringKind", f.offeringKind());
         put(form, "listingType", f.listingType());
         put(form, "title", f.title());
