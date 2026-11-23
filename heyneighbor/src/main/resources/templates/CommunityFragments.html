@@ -27,7 +27,7 @@
     </form>
 
     <nav class="cu-icons" aria-label="Quick actions">
-      <a href="#" onclick="return false;" title="Post a listing" aria-label="Post a listing">
+      <a th:href="@{/community/listings/new}" title="Post a listing" aria-label="Post a listing" th:classappend="${active == 'post'} ? 'on'">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></a>
       <a th:href="@{/community}" title="Home" aria-label="Home" th:classappend="${active == 'home'} ? 'on'">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>
@@ -59,7 +59,7 @@
   <nav aria-label="Community User menu">
     <a th:href="@{/community}" th:classappend="${active == 'home'} ? 'on'"><span>🏠</span> Home</a>
     <th:block th:each="n : ${roleNav}">
-      <a th:if="${n.enabled}" th:href="@{${n.href}}" th:classappend="${active == 'browse' and n.href == '/community/listings'} ? 'on'">
+      <a th:if="${n.enabled}" th:href="@{${n.href}}" th:classappend="${(active == 'browse' and n.href == '/community/listings') or (active == 'post' and n.href == '/community/listings/new')} ? 'on'">
         <span th:text="${n.icon}">🔎</span> <span th:text="${n.label}">Browse Listings</span></a>
       <a th:unless="${n.enabled}" href="#" onclick="return false;">
         <span th:text="${n.icon}">➕</span> <span th:text="${n.label}">Post a Listing</span></a>
@@ -75,6 +75,7 @@
 <article class="card" th:fragment="card(item)">
   <div class="thumb" th:style="'background:' + ${item.color}">
     <span class="emoji" th:text="${item.emoji}">🥕</span>
+    <img class="cu-photo" th:if="${item.photo != null}" th:src="${item.photo}" alt="" loading="lazy" onerror="this.remove()">
     <span class="badge" th:classappend="${item.listing_type == 'trade'} ? 'trade'"
           th:text="${item.listing_type == 'trade'} ? 'Trade' : 'Free'">Free</span>
   </div>

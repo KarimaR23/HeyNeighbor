@@ -20,6 +20,7 @@ public final class AccessRules {
             new Rule("/admin/reports", "report.generate"),
             new Rule("/admin/account-status", "account.change_status"),
             new Rule("/admin", "user.list"),
+            new Rule("/community/listings/new", "listing.create"),
             new Rule("/community", "listing.browse"),
             new Rule("/partner", "request.view_org"),
             new Rule("/moderator", "report.view_listing"),

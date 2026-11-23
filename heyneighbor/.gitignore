@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Listing photos uploaded while testing (each computer keeps its own) ###
+uploads/

@@ -26,7 +26,7 @@ public class NavService {
 
             "community_user", List.of(
                     new NavItem("Browse Listings", "/community/listings", true, "🔎", "Search free items and services near you"),
-                    new NavItem("Post a Listing", "#", false, "➕", "Give away or trade something"),
+                    new NavItem("Post a Listing", "/community/listings/new", true, "➕", "Give away or trade something"),
                     new NavItem("My Requests", "#", false, "📨", "Requests and trade proposals you have made"),
                     new NavItem("My Exchanges", "#", false, "🤝", "Reserved and completed exchanges"),
                     new NavItem("Messages", "#", false, "💬", "Talk with neighbors"),

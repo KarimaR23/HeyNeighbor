@@ -37,6 +37,9 @@
       </form>
     </div>
 
+    <p class="cu-success" th:if="${posted != null}" role="status">
+      ✅ Your listing is posted. Neighbors can now find it in Browse Listings.</p>
+
     <p class="cu-note" th:if="${locationMissing}">
       Add your location to your profile to search by distance. Showing nothing for this distance until then.</p>
 
