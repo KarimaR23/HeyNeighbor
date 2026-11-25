@@ -131,3 +131,10 @@ ORDER BY 1, 2;
 
 The updated ER diagram and data dictionary are in the repository with the Sprint III files.
 
+
+## Sprint Cycle V – Presentation Video
+
+The following video demonstrates the progress and functionality
+implemented during Sprint Cycle V of the Hey Neighbor project.
+
+[▶ Watch Sprint Cycle V Presentation on YouTube]([YOUR_YOUTUBE_LINK](https://www.youtube.com/watch?v=3MNz5JHyVoQ))
